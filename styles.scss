@@ -1,0 +1,321 @@
+//Colors
+
+$eggplant: #613fac;
+$teal: #418689;
+$green: #7aa532;
+$dkgray: #222;
+
+.site-header {
+	// enqueued when sticky nav is enabled
+	&.shrink {
+		box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+		//background: #eee;
+		.site-header-main {
+			.site-inner {
+				padding: 0px;
+				.next {
+					.header-right {
+						#header-search-form {
+							top: 92px;
+						}
+						span.phone {
+							display: inline-block; 
+							padding-right: 1em;
+						}
+					}
+				}
+			}
+		}
+	}
+	.site-header-main {
+		//box-shadow: 0px 0px 40px rgba(0,0,0,0.2) inset;
+		.site-inner {
+			padding: 20px 0px;
+			transition: .4s all;
+			display: flex;
+			align-items: center;
+			.next {
+				flex: auto;
+				text-align: left;
+				display: flex;
+				.site-header-menu {
+					align-self: flex-end;
+					padding-left: 3em;
+					nav {
+						.menu-main-container {
+							.primary-menu {
+								li {
+									a {
+										font-weight: 400;
+									}
+									ul.sub-menu {
+										li {
+											a {
+												font-size: .95em;
+												font-weight: 400;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				.header-right {
+					flex: auto;
+					text-align: right;
+					align-self: flex-end;
+					span.phone {
+						display: block;
+						font-weight: bold;
+						margin-bottom: .5em;
+						transition: .4s all;
+						a {
+							color: $dkgray;
+							&:hover {
+								color: $teal;
+							}
+						}
+					}
+					a.button {
+						display: inline-block;
+						background: rgba($teal, 0.7);
+						text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); 
+						box-shadow: inset 0px 0px 8px $teal;
+						&:hover {
+							background: $teal;
+						}
+					}
+					#header-search-form {
+						position: absolute;
+						display: none;
+						width: 350px;
+						padding: 20px;
+						top: 134px;
+						right: 0;
+						z-index: 9999;
+						form {
+							text-align: left;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.site-content {
+	.content-area {
+		.site-main {
+			section {
+				.overlay {
+					background-color: rgba(0,0,0,0.3);
+    				box-shadow: inset 0 20px 9px -19px rgba(0,0,0,0.4);
+					position: relative;
+					top: 0;
+					left: 0;
+					z-index: 2;
+					.site-inner {
+						z-index: 2;
+						section.static {
+							height: 60vh;
+							display: flex;
+							justify-content: center;
+							flex-direction: column;
+							align-items: center;
+							h2 {
+								font-size: 3em;
+								text-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+							}
+							p.tagline {
+								font-size: 1.7em;
+								font-weight: 300;
+								text-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+							}
+							a.button {
+								text-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+								box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+								//background: $dkgray;
+								&:hover {
+									//background: $teal;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.home .services {
+	box-shadow: 0px 0px 40px rgba(0,0,0,0.4) inset;
+	background: $teal; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(right, $teal, $eggplant); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, $teal, $eggplant); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, $teal, $eggplant); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, $teal, $eggplant); /* Standard syntax */
+	padding: 4em 0;
+	.site-inner {
+		display: flex;
+		.service {
+			flex: 1;
+			padding: 1em 2em 2em 2em;
+			text-align: center;
+			position: relative;
+			.thumb {
+				height: 200px;
+				width: 200px;
+				background-size: cover;
+				background-position: center center;
+				border-radius: 100px;
+				margin: 0 auto 1.5em auto;
+				transition: .4s all;
+				box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+				border: 5px solid #fff;
+				&:hover {
+					opacity: .8;
+				}
+			}
+			h3 {
+				padding: .5em 0;
+				line-height: 140%;
+				text-transform: none;
+				letter-spacing: .5px;
+				font-size: 1.5em;
+				font-weight: 600;
+			}
+			p {
+				padding-bottom: 1em;
+				line-height: 140%;
+			}
+			.bottom {
+				position: absolute;
+				bottom: .5em;
+				left: 0;
+				width: 100%;
+				margin: 0 auto;
+				a.button {
+					display: inline-block;
+				}
+			}
+		}
+	}
+}
+
+.testimonials {
+	padding: 80px 60px;
+	box-shadow: 0px 0px 40px rgba(0,0,0,0.4) inset;
+	.site-inner {
+		height: 50vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		.bx-wrapper {
+			box-shadow: none;
+			background: transparent;
+			position: relative;
+			.bx-pager.bx-default-pager {
+				a {
+					background: #eee;
+					border: 1px solid #ccc;
+					width: 20px;
+					height: 20px;
+					border-radius: 50px;
+					margin: 0px 12px;
+					&.active {
+						background: #ccc;
+					}
+				}
+			}
+			.bx-viewport {
+				height: auto!important;
+				ul.testimonials-slider {
+					li {
+						padding: 0px 250px;
+						.open-quote {
+							position: absolute;
+							top: 0px;
+							left: 40px;
+							font-size: 120px;
+							line-height: 100%;
+						}
+						.close-quote {
+							position: absolute;
+							right: 40px;
+							bottom: 0;
+							font-size: 120px;
+							line-height: 100%;
+						}
+						.quote {
+							padding-bottom: 25px;
+							.thumb {
+								width: 200px;
+								height: 150px;
+								background-size: contain;
+								background-position: center center;
+								background-repeat: no-repeat;
+								margin: 0 auto 1.5em auto;
+								transition: .4s all;
+								box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+								border: 5px solid #fff;
+								float: right;
+								&:hover {
+									opacity: .8;
+								}
+							}
+							p {
+								font-size: 24px;
+								line-height: 140%;
+								min-height: 180px;
+							}
+							span.author {
+								display: block;
+								text-align: right;
+								font-size: 1em;
+							}
+						}
+					}
+				}
+			}
+		}
+		.controls {
+			text-align: center;
+			div {
+				display: inline-block;
+				margin: 0px 40px;
+				a {
+					transition: .4s all;
+					i {
+						font-size: 4em;
+					}
+					&:hover {
+						opacity: .8;
+					}
+				}
+			}
+		}
+	}
+}
+
+.site-footer {
+	.social {
+		display: flex;
+		text-align: right;
+		justify-content: flex-end;
+		.social-navigation {
+			margin-bottom: 0;
+			padding-top: 1em;
+		}
+	}
+	.container {
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		section {
+			flex: 1;
+			max-width: 300px;
+			width: 100%;
+		}
+	}
+}
