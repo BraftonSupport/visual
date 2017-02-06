@@ -187,9 +187,15 @@ function yttheme_enqueuingallthethings() {
 	// Theme stylesheet.
 	wp_enqueue_style( 'yttheme-style', get_template_directory_uri() . '/style.css' );
 
+	// Sass stylesheet.
+	wp_enqueue_style( 'yttheme-sass', get_template_directory_uri() . '/css/styles.css', array( 'yttheme-style' ), '20150930' );
+
 	// Featherlight
 	wp_enqueue_style( 'featherlight', get_template_directory_uri() . '/js/featherlight.css' );
 	wp_enqueue_script( 'featherlight.js', get_template_directory_uri() . '/js/featherlight.js');
+
+	// BxSlider
+	wp_enqueue_script( 'bxslider.js', get_template_directory_uri() . '/js/jquery.bxslider.min.js', array( 'jquery' ), '20151204', true );
 
 	// Load the Internet Explorer specific stylesheet.
 	wp_enqueue_style( 'yttheme-ie', get_template_directory_uri() . '/css/ie.css', array( 'yttheme-style' ), '20150930' );
@@ -375,7 +381,7 @@ if ( $options['ssbutton'] ) {
 			$linkedURL = 'linkedin.com/shareArticle?mini=true&url='.$ssbURL.'&title='.$ssbTitle;
 
 			// Add sharing button at the end of page/page content
-			$variable .= '<div class="ssb-social"><span>Social Share:</span>';
+			$variable .= '<div class="ssb-social">';
 			$options = get_option( 'yttheme_options' );
 			if ( $options['ss_fb'] ) { $variable .= '<a class="ssb-facebook" href="'.$facebookURL.'" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>'; }
 			if ( $options['ss_tw'] ) { $variable .= '<a class="ssb-twitter" href="'. $twitterURL .'" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>'; }
@@ -401,7 +407,16 @@ function bg_meta_markup($object) {
 	wp_nonce_field(basename(__FILE__), "meta-box-nonce");
 	?>
 		<div>
-			<p>Add Shadow&nbsp;<label class="screen-reader-text" for="shadow">Add Shadow</label>
+			<p>Display featured image as banner?&nbsp;<label class="screen-reader-text" for="banner">Banner</label>
+			<?php $banner_value = get_post_meta($object->ID, "banner", true);
+
+			if($banner_value == "") { ?>
+				<input name="banner" type="checkbox" value="true">
+			<?php } elseif($banner_value == "true") { ?>  
+				<input name="banner" type="checkbox" value="true" checked>
+			<?php } ?>
+
+			<p>Add Shadow?&nbsp;<label class="screen-reader-text" for="shadow">Add Shadow</label>
 			<?php $shadow_value = get_post_meta($object->ID, "shadow", true);
 
 			if($shadow_value == "") { ?>
@@ -450,10 +465,17 @@ function save_bg_meta_box($post_id, $post, $update)
 	if($slug != $post->post_type)
 		return $post_id;
 
+	$banner = "";
 	$shadow = "";
 	$bg_value = "";
 	$color = "";
 	$bgvideo_value = "";
+
+
+	if(isset($_POST["banner"])) {
+		$banner = $_POST["banner"];
+	}
+	update_post_meta($post_id, "banner", $banner);
 
 	if(isset($_POST["shadow"])) {
 		$shadow = $_POST["shadow"];
@@ -539,6 +561,58 @@ function create_team_posttype() {
 		'public' => true,
 		'has_archive' => true,
 		'rewrite' => array('slug' => 'team'),
+		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields' ),
+		'register_meta_box_cb' => 'add_more_boxes'
+		)
+	);
+}
+
+add_action( 'init', 'create_services_posttype' );
+function create_services_posttype() {
+	register_post_type( 'services',
+		array(
+			'labels' => array(
+			'name' => __( 'Services' ),
+			'singular_name' => __( 'Service' ),
+			'add_new' => __( 'Add New Service'),
+			'add_new_item' => __( 'Add New Service'),
+			'edit_item' => __( 'Edit Service' ),
+			'new_item' => __( 'New Service'),
+			'view_item' => __( 'View Service'),
+			'search_items' => __( 'Search Services'),
+			'all_items' => __( 'All Services')
+			),
+		'menu_icon' => 'dashicons-groups',
+		'hierarchical'  => false,
+		'public' => true,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'services'),
+		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields' ),
+		'register_meta_box_cb' => 'add_more_boxes'
+		)
+	);
+}
+
+add_action( 'init', 'create_testimonials_posttype' );
+function create_testimonials_posttype() {
+	register_post_type( 'testimonials',
+		array(
+			'labels' => array(
+			'name' => __( 'Testimonials' ),
+			'singular_name' => __( 'Testimonial' ),
+			'add_new' => __( 'Add New Testimonial'),
+			'add_new_item' => __( 'Add New Testimonial'),
+			'edit_item' => __( 'Edit Testimonial' ),
+			'new_item' => __( 'New Testimonial'),
+			'view_item' => __( 'View Testimonial'),
+			'search_items' => __( 'Search Testimonials'),
+			'all_items' => __( 'All Testimonials')
+			),
+		'menu_icon' => 'dashicons-groups',
+		'hierarchical'  => false,
+		'public' => true,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'testimonials'),
 		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields' ),
 		'register_meta_box_cb' => 'add_more_boxes'
 		)

@@ -183,6 +183,18 @@ function yttheme_customize_register( $wp_customize ) {
 		'label'       => __( 'Secondary Text Color', 'yttheme' ),
 		'section'     => 'colors',
 	) ) );
+
+	// Add secondary text color setting and control.
+	$wp_customize->add_setting( 'content_border_color', array(
+		'default'           => $color_scheme[6],
+		'sanitize_callback' => 'sanitize_hex_color',
+		'transport'         => 'postMessage',
+	) );
+
+	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'content_border_color', array(
+		'label'       => __( 'Content Border Color', 'yttheme' ),
+		'section'     => 'colors',
+	) ) );
 }
 add_action( 'customize_register', 'yttheme_customize_register', 11 );
 
@@ -234,6 +246,7 @@ function yttheme_get_color_schemes() {
 				'#00b1dd',
 				'#1a1a1a',
 				'#686868',
+				'#eeeeee',
 			),
 		),
 		'dark' => array(
@@ -245,6 +258,7 @@ function yttheme_get_color_schemes() {
 				'#ce8133',
 				'#bababa',
 				'#999999',
+				'#eeeeee',
 			),
 		),
 		'gray' => array(
@@ -256,6 +270,7 @@ function yttheme_get_color_schemes() {
 				'#66ddff',
 				'#f5f5f5',
 				'#cecece',
+				'#eeeeee',
 			),
 		),
 		'red' => array(
@@ -267,6 +282,7 @@ function yttheme_get_color_schemes() {
 				'#ff8c8c',
 				'#770000',
 				'#ffbbbb',
+				'#eeeeee',
 			),
 		),
 		'blue' => array(
@@ -278,6 +294,7 @@ function yttheme_get_color_schemes() {
 				'#87a6c1',
 				'#333333',
 				'#ffffff',
+				'#eeeeee',
 			),
 		),
 	) );
@@ -386,6 +403,7 @@ function yttheme_color_scheme_css() {
 		'link_hover_color'      => $color_scheme[3],
 		'main_text_color'       => $color_scheme[4],
 		'secondary_text_color'  => $color_scheme[5],
+		'content_border_color'	=> $color_scheme[6],
 		'border_color'          => vsprintf( 'rgba( %1$s, %2$s, %3$s, 0.2)', $color_textcolor_rgb ),
 		'secondlink_color'      => vsprintf( 'rgba( %1$s, %2$s, %3$s, 0.35)', $color_linkcolor_rgb ),
 		'secondlink_hover_color'=> vsprintf( 'rgba( %1$s, %2$s, %3$s, 0.75)', $color_linkcolor_rgb ),
@@ -447,7 +465,7 @@ function yttheme_get_color_scheme_css( $colors ) {
 	/* Color Scheme */
 
 	/* Background Color */
-	body {
+	body, header.site-header {
 		background-color: {$colors['background_color']};
 	}
 
@@ -810,6 +828,26 @@ function yttheme_color_scheme_css_template() {
 }
 add_action( 'customize_controls_print_footer_scripts', 'yttheme_color_scheme_css_template' );
 
+function yttheme_background_color_css() {
+	$color_scheme    = yttheme_get_color_scheme();
+	$default_color   = $color_scheme[0];
+	$bg_color = get_theme_mod( 'background_color', $default_color );
+
+	// Don't do anything if the current color is the default.
+	if ( $bg_color === $default_color ) {
+		return;
+	}
+
+	$css = '
+		header.site-header {
+			background-color: #%1$s;
+		}
+	';
+
+	wp_add_inline_style( 'yttheme-style', sprintf( $css, $bg_color ) );
+}
+add_action( 'wp_enqueue_scripts', 'yttheme_background_color_css', 11 );
+
 /**
  * Enqueues front-end CSS for the secondary background color.
  *
@@ -833,7 +871,8 @@ function yttheme_secondary_background_color_css() {
 		.secondary,
 		.site-footer,
 		.site-header-menu.below,
-		#top {
+		#top,
+		.home .services {
 			background-color: %1$s;
 		}
 	';
@@ -1068,9 +1107,9 @@ function yttheme_link_hover_color_css() {
 		}
 	';
 
-	wp_add_inline_style( 'yttheme-style', sprintf( $css, $link_color ) );
+	wp_add_inline_style( 'yttheme-style', sprintf( $css, $link_hover_color ) );
 }
-add_action( 'wp_enqueue_scripts', 'yttheme_link_color_css', 11 );
+add_action( 'wp_enqueue_scripts', 'yttheme_link_hover_color_css', 11 );
 
 /**
  * Enqueues front-end CSS for the main text color.
@@ -1239,7 +1278,12 @@ function yttheme_secondary_text_color_css() {
 		.site-footer,
 		.site-header-menu.below,
 		#top,
-		.social-navigation a {
+		.social-navigation a,
+		.background,
+		.home .services,
+		a.button, 
+		footer.site-footer a 
+		 {
 			color: %1$s;
 		}
 
@@ -1252,3 +1296,39 @@ function yttheme_secondary_text_color_css() {
 	wp_add_inline_style( 'yttheme-style', sprintf( $css, $secondary_text_color ) );
 }
 add_action( 'wp_enqueue_scripts', 'yttheme_secondary_text_color_css', 11 );
+
+/**
+ * Enqueues front-end CSS for the content border color.
+ *
+ * @since Diving Bell 1.0
+ *
+ * @see wp_add_inline_style()
+ */
+function yttheme_border_css() {
+	$color_scheme    = yttheme_get_color_scheme();
+	$default_color   = $color_scheme[6];
+	$border_color = get_theme_mod( 'content_border_color', $default_color );
+
+	// Don't do anything if the current color is the default.
+	//if ( $border_color === $default_color ) {
+		//return;
+	//}
+
+	$css = '
+		/* Custom Border */
+
+		/**
+		 * IE8 and earlier will drop any block with CSS3 selectors.
+		 * Do not combine these styles with the next block.
+		 */
+		.site-content {
+			border-top: 3px solid %1$s;
+		}
+		#header-search-form {
+			background: %1$s;
+		}
+	';
+
+	wp_add_inline_style( 'yttheme-style', sprintf( $css, $border_color ) );
+}
+add_action( 'wp_enqueue_scripts', 'yttheme_border_css', 11 );

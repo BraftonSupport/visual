@@ -668,7 +668,7 @@ input[type="reset"]:focus,
 input[type="submit"]:hover,
 input[type="submit"]:focus {
 	color: #fff;
-	background: #00b1dd;
+	/*background: #00b1dd;*/
 	outline: none;
 }
 
@@ -903,7 +903,6 @@ a:active,
 	line-height: 1.3125;
 	outline-offset: -1px;
 	padding: 0.84375em 0;
-	color: #007acc;
 }
 
 .main-navigation a:hover,
@@ -970,7 +969,6 @@ a:active,
 .dropdown-toggle:hover,
 .dropdown-toggle:focus {
 	background-color: transparent;
-	color: #007acc;
 }
 
 .dropdown-toggle:focus {
@@ -3499,7 +3497,6 @@ p > video {
 		outline-offset: -8px;
 		padding: 0.65625em 0.875em;
 		white-space: nowrap;
-		color: #007acc;
 	}
 
 	.main-navigation li:hover > a,

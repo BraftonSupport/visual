@@ -10,24 +10,30 @@
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-	<?php if ( !is_front_page()&&!has_post_thumbnail() ) : ?>
+	<?php if (!$banner) { ?>
 		<header class="entry-header">
 			<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 		</header><!-- .entry-header -->
-	<?php endif; ?>
+	<?php } ?>
 
 	<div class="entry-content">
-		<?php
-		the_content();
+		<?php 
+			if ($nobanner) {
+				if (has_post_thumbnail() ) { 
+					echo the_post_thumbnail(); 
+				} 
+			}
 
-		wp_link_pages( array(
-			'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'yttheme' ) . '</span>',
-			'after'       => '</div>',
-			'link_before' => '<span>',
-			'link_after'  => '</span>',
-			'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'yttheme' ) . ' </span>%',
-			'separator'   => '<span class="screen-reader-text">, </span>',
-		) );
+			the_content();
+
+			wp_link_pages( array(
+				'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'yttheme' ) . '</span>',
+				'after'       => '</div>',
+				'link_before' => '<span>',
+				'link_after'  => '</span>',
+				'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'yttheme' ) . ' </span>%',
+				'separator'   => '<span class="screen-reader-text">, </span>',
+			) );
 		?>
 	</div><!-- .entry-content -->
 

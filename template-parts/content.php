@@ -26,6 +26,10 @@ $thumbnail = get_the_post_thumbnail_url();
 
 			<footer class="entry-footer">
 				<?php yttheme_entry_meta(); ?>
+				<div class="cat"><?php the_category(' '); ?></div>
+				<?php if ( $options['ssbutton'] ) {
+					echo social_sharing_buttons($content);
+				} ?>
 				<?php
 					edit_post_link(
 						sprintf(

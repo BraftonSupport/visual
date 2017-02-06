@@ -56,4 +56,10 @@ jQuery(document).ready(function($){
     $('#menu-toggle').trigger('click');
   });
 
+  // Toggle search in header
+
+  $('.header-right a.button').click(function() {
+    $('#header-search-form').fadeToggle();
+  });
+
 });

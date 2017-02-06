@@ -24,11 +24,11 @@
 		endif; ?>
 			
 		<div class="site-info"><div class="site-inner container">
-			<?php if ( get_theme_mod( 'yttheme_logo' ) ) { ?>
-				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+			<?php // if ( get_theme_mod( 'yttheme_logo' ) ) { ?>
+				<!--<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 					<img src='<?php echo esc_url( get_theme_mod( 'yttheme_logo' ) ); ?>' alt='<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>' class="site-title">
-				</a>
-			<?php } ?>
+				</a>-->
+			<?php // } ?>
 
 			<?php if ( has_nav_menu( 'social' ) ) : ?>
 				<nav class="social-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Footer Social Links Menu', 'yttheme' ); ?>">
@@ -56,7 +56,7 @@
 		</div><!-- .site-info -->
 	</footer><!-- .site-footer -->
 	<div id="scrollTopbutton">
-		<a href="#masthead"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+		<a href="#top"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
 		<a href="#colophon"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
 	</div>
 </div><!-- .site -->

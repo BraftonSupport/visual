@@ -10,13 +10,19 @@ $options = get_option( 'yttheme_options' );
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-	</header><!-- .entry-header -->
 
 	<?php yttheme_excerpt(); ?>
 
 	<?php yttheme_post_thumbnail('full'); ?>
+
+	<header class="entry-header">
+		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+		<?php yttheme_entry_meta(); ?>
+				<div class="cat"><?php the_category(' '); ?></div>
+				<?php if ( $options['ssbutton'] ) {
+					echo social_sharing_buttons($content);
+				} ?>
+	</header><!-- .entry-header -->
 
 	<div class="entry-content">
 		<?php
@@ -38,7 +44,6 @@ $options = get_option( 'yttheme_options' );
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-		<?php yttheme_entry_meta(); ?>
 		<?php
 			edit_post_link(
 				sprintf(

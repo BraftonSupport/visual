@@ -20,7 +20,7 @@ get_header(); ?>
 		<main id="main" class="site-main" role="main">
 
 		<?php if ( have_posts() ) : ?>
-			<?php if ( is_home() && ! is_front_page() ) : ?><header class="entry-header">
+			<!--<?php if ( is_home() && ! is_front_page() ) : ?><header class="entry-header">
 				<h1 class="entry-title"><?php single_post_title(); ?></h1>
 			</header><!-- .page-header -->
 			<?php endif; ?>
