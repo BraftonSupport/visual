@@ -14,6 +14,22 @@
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
 
+		<?php if ( has_nav_menu( 'social' ) ) : ?>
+				<nav class="social-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Footer Social Links Menu', 'yttheme' ); ?>">
+					<div class="site-inner">
+						<?php
+							wp_nav_menu( array(
+								'theme_location' => 'social',
+								'menu_class'     => 'social-links-menu',
+								'depth'          => 1,
+								'link_before'    => '<span class="screen-reader-text">',
+								'link_after'     => '</span>',
+							) );
+						?>
+					</div>
+				</nav><!-- .social-navigation -->
+			<?php endif; ?>
+
 		<?php if ( is_active_sidebar( 'footer' ) ) :
 			echo '<div class="site-inner container';
 			echo ' w';
@@ -29,20 +45,6 @@
 					<img src='<?php echo esc_url( get_theme_mod( 'yttheme_logo' ) ); ?>' alt='<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>' class="site-title">
 				</a>-->
 			<?php // } ?>
-
-			<?php if ( has_nav_menu( 'social' ) ) : ?>
-				<nav class="social-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Footer Social Links Menu', 'yttheme' ); ?>">
-					<?php
-						wp_nav_menu( array(
-							'theme_location' => 'social',
-							'menu_class'     => 'social-links-menu',
-							'depth'          => 1,
-							'link_before'    => '<span class="screen-reader-text">',
-							'link_after'     => '</span>',
-						) );
-					?>
-				</nav><!-- .social-navigation -->
-			<?php endif; ?>
 
 			<?php
 				/**

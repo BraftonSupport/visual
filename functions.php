@@ -190,10 +190,6 @@ function yttheme_enqueuingallthethings() {
 	// Sass stylesheet.
 	wp_enqueue_style( 'yttheme-sass', get_template_directory_uri() . '/css/styles.css', array( 'yttheme-style' ), '20150930' );
 
-	// Featherlight
-	wp_enqueue_style( 'featherlight', get_template_directory_uri() . '/js/featherlight.css' );
-	wp_enqueue_script( 'featherlight.js', get_template_directory_uri() . '/js/featherlight.js');
-
 	// BxSlider
 	wp_enqueue_script( 'bxslider.js', get_template_directory_uri() . '/js/jquery.bxslider.min.js', array( 'jquery' ), '20151204', true );
 
@@ -219,7 +215,7 @@ function yttheme_enqueuingallthethings() {
 		wp_enqueue_script( 'yttheme-keyboard-image-navigation', get_template_directory_uri() . '/js/keyboard-image-navigation.js', array( 'jquery' ), '20151104' );
 	}
 
-	wp_enqueue_script( 'yttheme-script', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '20151204', true );
+	//wp_enqueue_script( 'yttheme-script', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '20151204', true );
 
 	wp_localize_script( 'yttheme-script', 'screenReaderText', array(
 		'expand'   => __( 'expand child menu', 'yttheme' ),
@@ -503,10 +499,10 @@ function save_bg_meta_box($post_id, $post, $update)
 function boxes_markup($object) {
 	wp_nonce_field(basename(__FILE__), "meta-box-nonce");
 	?>
-		<p><label for="rightbox">Right Box</label><br>
-		<textarea name="right_box" id="right_box" rows="4" placeholder="HTML plox"><?php echo get_post_meta($object->ID, "right_box", true); ?></textarea></p>
-		<p><label for="leftbox">Left Box</label><br>
-		<textarea name="left_box" id="left_box" rows="4" placeholder="HTML plox"><?php echo get_post_meta($object->ID, "left_box", true); ?></textarea></p>
+		<p><label for="rightbox">Title</label><br>
+		<input name="right_box" id="right_box" placeholder="Title" value="<?php echo get_post_meta($object->ID, "right_box", true); ?>" /></p>
+		<p><label for="leftbox">Bio</label><br>
+		<textarea name="left_box" id="left_box" rows="4" placeholder="Bio"><?php echo get_post_meta($object->ID, "left_box", true); ?></textarea></p>
 	<?php  
 }
 
@@ -546,8 +542,8 @@ function create_team_posttype() {
 	register_post_type( 'team',
 		array(
 			'labels' => array(
-			'name' => __( 'Instruments' ),
-			'singular_name' => __( 'Phenomenon' ),
+			'name' => __( 'Team Members' ),
+			'singular_name' => __( 'Team Member' ),
 			'add_new' => __( 'Add New Situation'),
 			'add_new_item' => __( 'Add New Concern'),
 			'edit_item' => __( 'Edit Everything' ),
@@ -617,6 +613,191 @@ function create_testimonials_posttype() {
 		'register_meta_box_cb' => 'add_more_boxes'
 		)
 	);
+}
+
+add_action( 'init', 'create_webinars_posttype' );
+function create_webinars_posttype() {
+	register_post_type( 'webinars',
+		array(
+			'labels' => array(
+			'name' => __( 'Webinars' ),
+			'singular_name' => __( 'Webinar' ),
+			'add_new' => __( 'Add New Webinar'),
+			'add_new_item' => __( 'Add New Webinar'),
+			'edit_item' => __( 'Edit Webinar' ),
+			'new_item' => __( 'New Webinar'),
+			'view_item' => __( 'View Webinar'),
+			'search_items' => __( 'Search Webinars'),
+			'all_items' => __( 'All Webinars')
+			),
+		'menu_icon' => 'dashicons-groups',
+		'hierarchical'  => false,
+		'public' => true,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'webinars'),
+		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields', 'editor', 'excerpt' ),
+		'register_meta_box_cb' => 'add_more_boxes'
+		)
+	);
+}
+
+add_action( 'init', 'create_awards_posttype' );
+function create_awards_posttype() {
+	register_post_type( 'awards',
+		array(
+			'labels' => array(
+			'name' => __( 'Awards' ),
+			'singular_name' => __( 'Award' ),
+			'add_new' => __( 'Add New Award'),
+			'add_new_item' => __( 'Add New Award'),
+			'edit_item' => __( 'Edit Award' ),
+			'new_item' => __( 'New Award'),
+			'view_item' => __( 'View Award'),
+			'search_items' => __( 'Search Awards'),
+			'all_items' => __( 'All Awards')
+			),
+		'menu_icon' => 'dashicons-groups',
+		'hierarchical'  => false,
+		'public' => true,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'awards'),
+		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields', 'editor', 'excerpt' ),
+		'register_meta_box_cb' => 'add_more_boxes'
+		)
+	);
+}
+
+add_action( 'init', 'create_faq_posttype' );
+function create_faq_posttype() {
+	register_post_type( 'faq',
+		array(
+			'labels' => array(
+			'name' => __( 'FAQs' ),
+			'singular_name' => __( 'FAQ' ),
+			'add_new' => __( 'Add New FAQ'),
+			'add_new_item' => __( 'Add New FAQ'),
+			'edit_item' => __( 'Edit FAQ' ),
+			'new_item' => __( 'New FAQ'),
+			'view_item' => __( 'View FAQ'),
+			'search_items' => __( 'Search FAQs'),
+			'all_items' => __( 'All FAQs')
+			),
+		'menu_icon' => 'dashicons-groups',
+		'hierarchical'  => false,
+		'public' => true,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'faqs'),
+		'supports' => array( 'title', 'revisions', 'thumbnail', 'custom-fields', 'editor', 'excerpt' ),
+		'register_meta_box_cb' => 'add_more_boxes'
+		)
+	);
+}
+
+// Create custom taxonomies
+function create_services_taxonomy() {
+	// Add new taxonomy, make it hierarchical (like categories)
+	$labels = array(
+		'name'              => _x( 'Service Types', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Service Type', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Service Types' ),
+		'all_items'         => __( 'All Service Types' ),
+		'parent_item'       => __( 'Parent Service Type' ),
+		'parent_item_colon' => __( 'Parent Service Type:' ),
+		'edit_item'         => __( 'Edit Service Type' ),
+		'update_item'       => __( 'Update Service Type' ),
+		'add_new_item'      => __( 'Add New Service Type' ),
+		'new_item_name'     => __( 'New Service Type Name' ),
+		'menu_name'         => __( 'Service Type' ),
+	);
+
+	$args = array(
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'services-type', 'with_front' => false ),
+	);
+
+	register_taxonomy( 'services-type', array( 'services' ), $args );
+}
+add_action( 'init', 'create_services_taxonomy' );
+
+function create_webinar_taxonomy() {
+	// Add new taxonomy, make it hierarchical (like categories)
+	$labels = array(
+		'name'              => _x( 'Webinar Types', 'taxonomy general name' ),
+		'singular_name'     => _x( 'Webinar Type', 'taxonomy singular name' ),
+		'search_items'      => __( 'Search Webinar Types' ),
+		'all_items'         => __( 'All Webinar Types' ),
+		'parent_item'       => __( 'Parent Webinar Type' ),
+		'parent_item_colon' => __( 'Parent Webinar Type:' ),
+		'edit_item'         => __( 'Edit Webinar Type' ),
+		'update_item'       => __( 'Update Webinar Type' ),
+		'add_new_item'      => __( 'Add New Webinar Type' ),
+		'new_item_name'     => __( 'New Webinar Type Name' ),
+		'menu_name'         => __( 'Webinar Type' ),
+	);
+
+	$args = array(
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'webinar-type', 'with_front' => false ),
+	);
+
+	register_taxonomy( 'webinar-type', array( 'webinars' ), $args );
+}
+add_action( 'init', 'create_webinar_taxonomy' );
+
+/* Breadcrumbs */
+
+function the_breadcrumb() {
+	$post_type = get_post_type_object( get_post_type($post) );
+	echo '<ul id="crumbs">';
+	if (!is_front_page()) {
+		echo '<li><a href="';
+		echo get_option('home');
+		echo '">';
+		echo 'Home';
+		echo "</a></li>";
+		if (is_page() || is_home() ) {
+			echo '<li>';
+			echo the_title();
+			echo '</li>';
+		} else if (is_post_type_archive() || is_singular(get_post_types())) {
+			echo '<li>';
+			echo '<a href="';
+			echo $post_type_archive->url;
+			echo '">';
+			echo $post_type->labels->name;
+			echo '</a>';
+			echo '</li>';
+			if (is_singular()) {
+				echo "<li>";
+				echo the_title(); 
+				echo '</li>';
+			}
+		} else if (is_category() || is_single()) {
+			echo '<li>';
+			the_category(' </li><li> ');
+			if (is_single()) {
+				echo "</li><li>";
+				the_title();
+				echo '</li>';
+			}
+		} 
+	}
+	elseif (is_tag()) {single_tag_title();}
+	elseif (is_day()) {echo"<li>Archive for "; the_time('F jS, Y'); echo'</li>';}
+	elseif (is_month()) {echo"<li>Archive for "; the_time('F, Y'); echo'</li>';}
+	elseif (is_year()) {echo"<li>Archive for "; the_time('Y'); echo'</li>';}
+	elseif (is_author()) {echo"<li>Author Archive"; echo'</li>';}
+	elseif (isset($_GET['paged']) && !empty($_GET['paged'])) {echo "<li>Blog Archives"; echo'</li>';}
+	elseif (is_search()) {echo"<li>Search Results"; echo'</li>';}
+	echo '</ul>';
 }
 
 /* the team shortcode */

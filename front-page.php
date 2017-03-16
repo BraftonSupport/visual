@@ -129,7 +129,7 @@ get_header(); ?>
 
 		<?php // queue the services
 
-			$service_array = array('post_type' => 'services', 'posts_per_page' => -1);
+			$service_array = array('post_type' => 'services', 'posts_per_page' => '3');
 			$loop = new WP_QUERY ($service_array);
 
 			if ($loop->have_posts() ) :
@@ -175,7 +175,8 @@ get_header(); ?>
 			endwhile;
 			else :
 			endif;
-		echo '</div></div>'; ?>
+			echo '</div></div>'; 
+			wp_reset_query(); ?>
 
 		<?php // queue the testimonials 
 
@@ -253,8 +254,101 @@ get_header(); ?>
 			endwhile;
 			else :
 			endif;
-		echo '</ul><div class="controls"><div id="slider-prev"></div><div id="slider-next"></div></div></div></div>'; ?>
+			echo '</ul><div class="controls"><div id="slider-prev"></div><div id="slider-next"></div></div></div></div>'; 
+			wp_reset_query(); ?>
 
+		<?php // queue the 3  most recent awards 
+
+			$award_array = array('post_type' => 'awards', 'posts_per_page' => 3);
+			$loop3 = new WP_QUERY ($award_array);
+
+			if ($loop3->have_posts() ) :
+
+				echo '<div class="awards"><div class="site-inner"><h2>Certifications/Awards</h2>';
+
+			while ($loop3->have_posts() ) : $loop3->the_post(); 
+
+			$athumb = '';
+				if (function_exists('has_post_thumbnail')) {
+					if ( has_post_thumbnail() ) {
+						$post_image_id = get_post_thumbnail_id($post_to_use->ID);
+							if ($post_image_id) {
+								$athumb = wp_get_attachment_image_src( $post_image_id, 'large', false);
+								if ($athumb) (string)$athumb = $athumb[0];
+							}
+					}
+				} 
+			?>
+
+			<div class="award">
+				<?php if ($athumb) { ?>
+					<a href="<?php the_permalink(); ?>">
+						<div class="thumb" style="background-image: url('<?php echo $athumb; ?>');">
+							<div class="overlay">
+								<h3><?php the_title(); ?></h3>
+								<?php the_excerpt(); ?>
+							</div>
+						</div>
+					</a>
+				<?php } else { ?>
+					<a href="<?php the_permalink(); ?>"><h3><?php the_title(); ?></h3></a>
+					<?php the_excerpt(); ?>
+				<?php } ?>
+			</div>
+
+			<?php
+
+			endwhile;
+			else :
+			endif;
+			echo '</div></div>';
+			wp_reset_query(); ?>
+
+		<?php // queue the 3  most recent webinars 
+
+			$webinar_array = array('post_type' => 'webinars', 'posts_per_page' => 3);
+			query_posts($webinar_array);
+
+			if (have_posts() ) :
+
+				echo '<div class="webinars"><div class="site-inner"><h2>Webinars/Events</h2>';
+
+			while (have_posts() ) : the_post(); 
+
+			$wthumb = '';
+				if (function_exists('has_post_thumbnail')) {
+					if ( has_post_thumbnail() ) {
+						$post_image_id = get_post_thumbnail_id($post_to_use->ID);
+							if ($post_image_id) {
+								$wthumb = wp_get_attachment_image_src( $post_image_id, 'large', false);
+								if ($wthumb) (string)$wthumb = $wthumb[0];
+							}
+					}
+				} 
+			?>
+
+			<div class="webinar">
+				<?php if ($wthumb) { ?>
+					<a href="<?php the_permalink(); ?>">
+						<div class="thumb" style="background-image: url('<?php echo $wthumb; ?>');">
+							<div class="overlay">
+								<h3><?php the_title(); ?></h3>
+								<?php the_excerpt(); ?>
+							</div>
+						</div>
+					</a>
+				<?php } else { ?>
+					<a href="<?php the_permalink(); ?>"><h3><?php the_title(); ?></h3></a>
+					<?php the_excerpt(); ?>
+				<?php } ?>
+			</div>
+
+			<?php
+
+			endwhile;
+			else :
+			endif;
+		echo '</div></div>'; ?>
 	</main><!-- .site-main -->
 
 </div><!-- .content-area -->

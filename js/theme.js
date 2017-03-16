@@ -57,9 +57,13 @@ jQuery(document).ready(function($){
   });
 
   // Toggle search in header
-
   $('.header-right a.button').click(function() {
     $('#header-search-form').fadeToggle();
   });
 
+  // FAQ toggle
+  $('.faq h2').click(function() {
+    $(this).next('.entry-content').toggle("fast");
+    $(this).toggleClass("active");
+  });
 });

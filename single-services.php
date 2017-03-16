@@ -87,15 +87,30 @@ get_header(); ?>
 
 				<div class="entry-content">
 					<?php 
+						$mainimg = get_field('main_image');
 						if (!$banner) {
-							if (has_post_thumbnail() ) { 
+							if ($mainimg) { 
 								echo '<div class="inline-thumb">';
-								echo the_post_thumbnail(); 
+								echo '<img src="';
+								echo $mainimg;
+								echo '" />';
 								echo '</div>';
 							} 
 						}
 
-						the_content();
+						echo '<div class="title">';
+						echo '<div class="thumb">';
+						echo the_post_thumbnail(); 
+						echo '</div><div class="entry-meta">';
+						echo '<h1>';
+						echo the_title(); 
+						echo '</h1>';
+						echo '<p>';
+						echo get_field('description');
+						echo '</p>';
+						echo '</div></div>';
+
+						echo get_field('page_content'); 
 
 						wp_link_pages( array(
 							'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'yttheme' ) . '</span>',
@@ -106,54 +121,14 @@ get_header(); ?>
 							'separator'   => '<span class="screen-reader-text">, </span>',
 						) );
 					?>
-					<?php if (is_page('About Us') ) { ?>
-
-						<div class="team">
-
-							<h2><?php echo get_field('our_team_h2'); ?></h2>
-
-							<div class="bio">
-								<?php echo get_field('our_team_content'); ?>
-							</div>
-
-							<?php // queue the 3  most recent awards 
-
-							$team_array = array('post_type' => 'team', 'posts_per_page' => -1);
-							$loop = new WP_QUERY ($team_array);
-
-							if ($loop->have_posts() ) :
-
-							while ($loop->have_posts() ) : $loop->the_post(); 
-							$thumbnail = get_the_post_thumbnail_url();
-
-							?>
-
-							<div class="team-member">
-								<a href="<?php the_permalink(); ?>"><div class="featured" style="background-image: url(<?php echo $thumbnail; ?>);"></div></a>
-								<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-								<span class="title"><?php echo get_field('right_box'); ?></span>
-							</div>
-
-							<?php endwhile; endif; wp_reset_query(); ?>
-
-						</div>
-
-					<?php } ?>
 				</div><!-- .entry-content -->
 
-				<?php
-					edit_post_link(
-						sprintf(
-							/* translators: %s: Name of current post */
-							__( 'Edit<span class="screen-reader-text"> "%s"</span>', 'yttheme' ),
-							get_the_title()
-						),
-						'<footer class="entry-footer"><span class="edit-link">',
-						'</span></footer><!-- .entry-footer -->'
-					);
-				?>
-
 			</article><!-- #post-## -->
+
+		<?php
+		endwhile;
+		?>
+
 	</main><!-- .site-main -->
 
 	<aside id="secondary" class="sidebar widget-area" role="complementary">
@@ -165,13 +140,6 @@ get_header(); ?>
 			$cta2 		= get_field('sidebar_cta_2');
 			$cta2txt 	= get_field('sidebar_cta_#2_text');
 			$cta2url 	= get_field('sidebar_cta_#2_url');
-		?>
-		<?php if (is_page('Contact Us') ) { ?>	
-		ugh
-			<?php echo get_field('address'); ?>
-		<?php } ?>
-		<?php
-		endwhile;
 		?>
 		<?php if ($cta) { ?>
 			<div class="cta long" style="background-image: url('<?php echo $cta; ?>');">
@@ -212,3 +180,4 @@ get_header(); ?>
 <?php } ?>
 
 <?php get_footer(); ?>
+

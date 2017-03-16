@@ -1,8 +1,8 @@
 /******************************************************************
-Theme Name: Diving Bell
-Description: I don't know. ...I just don't know
-Author: Yvonne Tse
-Author URI: http://www.yvonnetse.com/
+Theme Name: Brafton Business 
+Description: I still don't know her
+Author: Greg Rich
+Author URI: http://www.gregoryrich.com/
 Version: 1.0
 Tags: fluid-layout, responsive-layout, accessibility-ready, two-columns, left-sidebar, fixed-layout, rtl-language-support
 */
@@ -652,9 +652,9 @@ input[type="submit"][disabled]:focus {
 	transition: all .5s ease-in-out;
 	color: #fff;
 	padding: 15px 25px;
-	border-radius: 26px/50%;
-	-moz-border-radius: 26px/50%;
-	-webkit-border-radius: 26px/50%;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 	background: #007acc;
 }
 
@@ -1490,19 +1490,23 @@ blockquote:after,
 .latest .post,
 .single .content-area,
 .blog .content-area,
-.archive .content-area {
+.archive .content-area,
+.search .content-area {
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
 }
 .single .content-area,
 .blog .content-area,
-.archive .content-area {
+.archive .content-area,
+.search .content-area {
 	-webkit-flex-direction: column;
 	-ms-flex-direction: column;
 	flex-direction: column;
 }
-
+.search section#primary {
+	margin: 0 auto;
+}
 aside, section {
 	-webkit-flex: 1 0 auto;
 	-ms-flex: 1 0 auto;
@@ -1751,7 +1755,7 @@ aside:last-of-type, section:last-of-type { margin-right: 0; }
  */
 
 .site-inner {
-	max-width: 1320px; width: 85%; margin: 0 auto; clear: both;
+	max-width: 1320px; margin: 0 auto; clear: both;
 }
 
 .site-inner .site-inner { width: 100%; }
@@ -1930,7 +1934,7 @@ aside:last-of-type, section:last-of-type { margin-right: 0; }
 }
 
 img.site-title {
-	max-width: 200px;
+	height: 75px;
 }
 .site-icon { display: none; }
 
@@ -2471,12 +2475,26 @@ body:not(.search-results) .entry-summary > :last-child,
 	color: #fff;
 }
 
+.simple .excerpt {
+	background: #eee;
+	padding: 20px;
+	overflow: auto;
+}
+
+.simple .excerpt p {
+	line-height: 130%;
+}
+
+.simple .excerpt p:last-of-type {
+	/*margin-bottom: 50px;*/
+}
+
 .simple .entry-footer,
 body:not(.search-results) article:first-of-type:not(.type-page).simple .entry-footer {
 	font-size: 1em;
 	float: none;
 	width: 100%;
-	margin: 0 0 10px 0;
+	/*margin: 0 0 10px 0;*/
 	padding: 10px;
 	background: #ccc;
 	text-align: center;
@@ -3235,7 +3253,8 @@ p > video {
 @media screen and (min-width: 35em) {
 	.single .content-area,
 	.blog .content-area,
-	.archive .content-area {
+	.archive .content-area,
+	.search .content-area {
 		-webkit-flex-direction: row;
 		-ms-flex-direction: row;
 		flex-direction: row;
