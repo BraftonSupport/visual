@@ -119,11 +119,11 @@ if ( $options['ga'] ) : ?>
 						<?php endif; ?>
 					</div><!-- .site-header-menu -->
 					<div class="header-right">
-						<span class="phone">Phone#</span>
-						<a class="button">Search</a>
+						<span class="phone"><a href="tel:2124474300"><i class="fa fa-phone"></i> 212-447-4300</a></span>
+						<!--<a class="button">Search</a>
 						<div id="header-search-form">
 							<?php echo get_search_form(); ?>
-						</div>
+						</div>-->
 					</div>
 				<?php //if ($options['nav'] == 'below') { echo '</div>'; } ?>
 				<?php if ($options['nav'] == 'next') { echo '</div></div>'; } ?>
@@ -138,3 +138,11 @@ if ( $options['ga'] ) : ?>
 
 
 	<div id="content" class="site-content">
+		<?php $banner = get_post_meta( get_queried_object_id(), 'banner', true ); ?>
+		<div class="breadcrumbs <?php if ($banner) { echo 'dark'; } ?>">
+			<div class="site-inner">
+				<?php if (!is_front_page() ) { ?>
+					<?php echo the_breadcrumb(); ?>
+				<?php } ?>
+			</div>
+		</div>

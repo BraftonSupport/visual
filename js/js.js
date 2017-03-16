@@ -5,5 +5,4 @@ jQuery(document).ready(function($){
 	$( "#ssbutton" ).click(function() {
 		$(".ss").toggle("slow");
 	});
-
 });

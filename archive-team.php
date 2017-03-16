@@ -1,6 +1,15 @@
 <?php
 /**
- * The template for displaying search results pages
+ * The template for displaying archive pages
+ *
+ * Used to display archive-type pages if nothing more specific matches a query.
+ * For example, puts together date-based pages if no date.php file exists.
+ *
+ * If you'd like to further customize these archive views, you may create a
+ * new template file for each one. For example, tag.php (Tag archives),
+ * category.php (Category archives), author.php (Author archives), etc.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package WordPress
  * @subpackage Twenty_Sixteen
@@ -9,18 +18,23 @@
 
 get_header(); ?>
 
-	<section id="primary" class="content-area site-inner">
+	<div id="primary" class="content-area site-inner">
 		<main id="main" class="site-main" role="main">
 
 		<?php if ( have_posts() ) : ?>
 
 			<header class="page-header">
-				<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'yttheme' ), '<span>' . esc_html( get_search_query() ) . '</span>' ); ?></h1>
+				<?php
+					the_archive_title( '<h1 class="page-title">', '</h1>' );
+					the_archive_description( '<div class="taxonomy-description">', '</div>' );
+				?>
 			</header><!-- .page-header -->
 
-			<?php
-			// Start the loop.
-			while ( have_posts() ) : the_post();
+			<div class="team-container">
+
+				<?php
+				// Start the Loop.
+				while ( have_posts() ) : the_post(); 
 
 				?>
 
@@ -63,39 +77,15 @@ get_header(); ?>
 
 							<footer class="entry-footer">
 								<?php // yttheme_entry_meta(); ?>
-
-								<span class="posted-on"><?php echo the_date('m/d/y'); ?></span>
-								<div class="cat"><?php the_category(' '); ?></div>
-								<?php if ( $options['ssbutton'] ) {
-									echo social_sharing_buttons($content);
-								} ?>
+								<span class="title">
+									<?php echo get_field('right_box'); ?>
+								</span>								
 							</footer><!-- .entry-footer -->
-							<div class="excerpt">
-							<?php
-								/* translators: %s: Name of current post */
-								the_excerpt( sprintf(
-									__( '<p>Continue reading<span class="screen-reader-text"> "%s"</span></p>', 'yttheme' ),
-									get_the_title()
-								) );
 
-								wp_link_pages( array(
-									'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'yttheme' ) . '</span>',
-									'after'       => '</div>',
-									'link_before' => '<span>',
-									'link_after'  => '</span>',
-									'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'yttheme' ) . ' </span>%',
-									'separator'   => '<span class="screen-reader-text">, </span>',
-								) );
-							?>
-							<a class="more" href="<?php the_permalink(); ?>">Read more</a>
-							<?php // if ( $options['ssbutton'] ) {
-								//echo social_sharing_buttons($content);
-							//} ?>
-							</div>
 						</div><!-- .entry-content -->
 						
 					</article><!-- #post-## -->
-
+				
 			<?php
 
 			// End the loop.
@@ -115,10 +105,10 @@ get_header(); ?>
 		endif;
 		?>
 
+		</div>
+
 		</main><!-- .site-main -->
-
-		<?php get_sidebar(); ?>
-
-	</section><!-- .content-area -->
+<?php // get_sidebar(); ?>
+	</div><!-- .content-area -->
 
 <?php get_footer(); ?>
