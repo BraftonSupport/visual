@@ -16,10 +16,10 @@ function establish_connection() {
 
 	// check the connection
 	if ( $conn->connect_error ) {
-		die( "Connection failed! Error is " . $conn->connect_error );
+		die( "<p>Connection failed! Error is " . $conn->connect_error . "</p>");
 	}
 
-	echo "Connect success!";
+	echo "<p>Connect success!</p>";
 	return $conn;
 }
 
@@ -28,4 +28,13 @@ function printDat( $toPrint ) {
 	echo "<pre>";
 	print_r( $toPrint );
 	echo "</pre>";
+}
+
+function getNumEmployees() {
+	$conn = establish_connection();
+	$query = "desc tbl_br_office_gb_numberoflives";
+
+	$res = $conn->query( $query );
+
+	printDat( $res );
 }
