@@ -8,6 +8,7 @@ define("divingbell", dirname(__FILE__));
 include divingbell.'/inc/themesettings.php';
 include divingbell.'/inc/themewidgets.php';
 include divingbell.'/inc/template-tags.php';
+include divingbell.'/inc/form-functions.php';
 
 /**
  * Diving Bell only works in WordPress 4.4 or later.
