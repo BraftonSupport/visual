@@ -19,7 +19,6 @@ function establish_connection() {
 		die( "<p>Connection failed! Error is " . $conn->connect_error . "</p>");
 	}
 
-	echo "<p>Connect success!</p>";
 	return $conn;
 }
 
@@ -30,11 +29,55 @@ function printDat( $toPrint ) {
 	echo "</pre>";
 }
 
+// looks at the columns of the "numberoflives" table
 function getNumEmployees() {
 	$conn = establish_connection();
 	$query = "desc tbl_br_office_gb_numberoflives";
 
+	$fieldsArray = array();
+
+	$fieldsToIgnore = ['officeid', 'servicetypeid', 'minimum', 'IsUpdated'];
+
 	$res = $conn->query( $query );
 
-	printDat( $res );
+	while( $row = $res->fetch_assoc() ) {
+		if ( !in_array( $row['Field'], $fieldsToIgnore ) ) {
+			$fieldsArray[] = $row['Field'];
+		}
+	}
+
+	return $fieldsArray;
+}
+
+function getCatNAICS() {
+	$conn = establish_connection();
+	$table = "naics_category";
+	$query = "SELECT naics_category_id, naics_category_name FROM $table";
+
+	$res = $conn->query( $query );
+
+	$cats = array();
+
+	while( $row = $res->fetch_assoc() ) {
+		$cats[] = $row;
+	}
+
+	return $cats;
+}
+
+// function to grab NAICS, based on the passed in category id
+function getNAICS( $id ) {
+	$conn = establish_connection();
+	$table = "naics";
+	$query = "SELECT id, name FROM $table WHERE naics_category_id = $id";
+
+	$res = $conn->query( $query );
+
+	$industries = array();
+
+	while( $row = $res->fetch_assoc() ) {
+		$industries[] = $row;
+	}
+
+	printDat( $industries );
 }
