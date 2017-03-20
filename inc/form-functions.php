@@ -154,7 +154,7 @@ function getOfficeInfo( $officeIDs, $service ) {
 	$conn = establish_connection();
 
 	$res = $conn->query( $query );
-	printDat($res);
+	//printDat($res);
 	$offices = array();
 
 	while( $row = $res->fetch_assoc() ) {

@@ -8,16 +8,24 @@ get_header();
 
 <?php
 
-/*echo "<h3>Testing getNAICS</h3>";
-$catNAICS = getCatNAICS();
+printDat(getNumEmployees());
 
-foreach( $catNAICS as $cat ) {
+//echo "<h3>Testing getNAICS</h3>";
+//$catNAICS = getCatNAICS();
+
+//printDat($catNAICS);
+
+/*foreach( $catNAICS as $cat ) {
 	$catName = $cat['naics_category_name'];
 	$catID = $cat['naics_category_id'];
 	echo "Fetching Industries for $catName";
 	$industry = getNAICS( $catID );
 	printDat( $industry );
 }*/
+
+//$industry = getNAICS( 50 );
+
+//printDat($industry);
 
 echo "<h3>testing getOfficeInfo using getPCOfficeIDs(111336)</h3>";
 
