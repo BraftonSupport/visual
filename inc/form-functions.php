@@ -100,3 +100,66 @@ function getGBOfficeIDs( $col ) {
 
 	return $ids;
 }
+
+// function to grab office IDs for PC
+// takes an industry id (corresponds to "id" in the table "naics"), and finds any office IDs that share that naics_id in the table "tbl_br_office_sic"
+// returns array of office ids
+function getPCOfficeIDs( $naicsID ) {
+	$conn = establish_connection();
+	$table = "tbl_br_office_sic";
+	$query = "SELECT officeid FROM $table WHERE naics_id = $naicsID";
+
+	$res = $conn->query( $query );
+
+	$ids = array();
+
+	while ( $row = $res->fetch_assoc() ) {
+		$ids[] = $row['officeid'];
+	}
+
+	return $ids;
+}
+
+// function to grab office details
+// takes an office ID and servicetypeid (of either GB, MM or PC), and stiches together two or three tables to build out an array of offices with what details are available
+// returns an array of row data...what each row contains, I've yet to fully establish
+function getOfficeInfo( $officeIDs, $service ) {
+	// string converted array of IDs, to be used in a MySQL 'IN' statement
+	$inString = implode( ',', $officeIDs );
+	// variables to contain table names
+	$office = "tbl_br_office";
+	$sic = "tbl_br_office_sic";
+	$details = "tbl_br_office_details";
+	$contact = "tbl_br_office_contact";
+
+	$query = "";
+	// add SELECT statements to query for all relevant tables
+	// build "office" adds
+	$officeSelect = $office . ".companyname, " . $office . ".address1, " . $office . ".address2, " . $office . ".city, " . $office . ".state, " . $office . ".zip, " . $office . ".country";
+	// build "contact" adds
+	$contactSelect = $contact . ".maincontact, " . $contact . ".website, " . $contact . ".email, " . $contact . ".telephone, " . $contact . ".fax";
+
+	// build FROM statement
+	$from = "FROM $office";
+	$from .= " INNER JOIN $contact ON " . $contact . ".officeid = " . $office . ".officeid";
+
+	// build WHERE statement
+	$where = "WHERE " . $office . ".officeid IN (" . $inString . ") && " . $office . ".servicetypeid = '" . $service . "'";
+
+	// lastly, string all that together into a single query
+	$query .= "SELECT " . $officeSelect . ", " . $contactSelect . " " . $from . " " . $where;
+
+	printDat( $query );
+
+	$conn = establish_connection();
+
+	$res = $conn->query( $query );
+	printDat($res);
+	$offices = array();
+
+	while( $row = $res->fetch_assoc() ) {
+		$offices[] = $row;
+	}
+
+	return $offices;
+}

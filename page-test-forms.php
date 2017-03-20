@@ -19,9 +19,11 @@ foreach( $catNAICS as $cat ) {
 	printDat( $industry );
 }*/
 
-echo "<h3>testing getGBOfficeIDs</h3>";
+echo "<h3>testing getOfficeInfo using getPCOfficeIDs(111336)</h3>";
 
-getGBOfficeIDs( "f1t100" );
+$officeIDs = getPCOfficeIDs( 111336 );
+
+getOfficeInfo( $officeIDs, "PC" );
 
 ?>
 
