@@ -8,7 +8,7 @@ get_header();
 
 <?php
 
-echo "<h3>Testing getNAICS</h3>";
+/*echo "<h3>Testing getNAICS</h3>";
 $catNAICS = getCatNAICS();
 
 foreach( $catNAICS as $cat ) {
@@ -17,7 +17,11 @@ foreach( $catNAICS as $cat ) {
 	echo "Fetching Industries for $catName";
 	$industry = getNAICS( $catID );
 	printDat( $industry );
-}
+}*/
+
+echo "<h3>testing getGBOfficeIDs</h3>";
+
+getGBOfficeIDs( "f1t100" );
 
 ?>
 

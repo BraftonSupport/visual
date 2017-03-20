@@ -79,5 +79,24 @@ function getNAICS( $id ) {
 		$industries[] = $row;
 	}
 
-	printDat( $industries );
+	return $industries;
+}
+
+// function to grab office IDs for GB
+// takes an employee range (ie column name from "number_of_lives") as input, and grabs any offices with a value in that column != 0 or null
+// returns an array of officeids
+function getGBOfficeIDs( $col ) {
+	$conn = establish_connection();
+	$table = "tbl_br_office_gb_numberoflives";
+	$query = "SELECT officeid FROM $table WHERE $col != 0 && $col IS NOT NULL";
+
+	$res = $conn->query( $query );
+
+	$ids = array();
+
+	while( $row = $res->fetch_assoc() ) {
+		$ids[] = $row['officeid'];
+	}
+
+	return $ids;
 }
