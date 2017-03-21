@@ -31,6 +31,15 @@ function populate_office_page() {
 	wp_enqueue_script( 'cmr-script', get_template_directory_uri() . '/js/cmr-scripts.js' );
 	?>
 
+	<style>
+		.office-wrap #office-detail-table tr:nth-child(even) {
+			background-color: #FFFFFF;
+		}
+		.office-wrap #office-detail-table tr {
+			border-bottom: 1px solid #000000;
+		}
+	</style>
+
 	<div class="office-wrap">
 		<h2>Welcome to the office details page!</h2>
 
@@ -284,7 +293,7 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	$from .= " INNER JOIN $contact ON " . $contact . ".officeid = " . $office . ".officeid";
 
 	// build WHERE statement
-	$where = "WHERE " . $office . ".officeid IN (" . $inString . ") && " . $office . ".servicetypeid = '" . $service . "'";
+	$where = "WHERE " . $office . ".officeid IN (" . $inString . ") && " . $office . ".servicetypeid = '" . $service . "' && " . $contact . ".servicetypeid = '" . $service . "'";
 
 	// lastly, string all that together into a single query
 	$query .= "SELECT " . $officeSelect . ", " . $contactSelect . " " . $from . " " . $where;
@@ -294,16 +303,15 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	$conn = establish_connection();
 
 	$res = $conn->query( $query );
-	$offices = array();
 
-	/*while( $row = $res->fetch_assoc() ) {
+	/*$offices = array();
+	while( $row = $res->fetch_assoc() ) {
 		$offices[] = $row;
-	}*/
-
-	//return $offices;
+	}
+	return $offices;*/
 
 	// generate an HTML table to display office details
-	$html = "<table>";
+	$html = "<table id='office-detail-table'>";
 	// top row, for column labels
 	$html .= "<tr>";
 	$html .= "<td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td>";
