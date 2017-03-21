@@ -18,6 +18,64 @@ if ( !$video ) {
 	$bg = get_post_meta( get_queried_object_id(), 'bgcolor', true );
 	$shadow = get_post_meta( get_queried_object_id(), 'shadow', true );
 }
+ 
+  //response generation function
+
+  $response = "";
+
+  //function to generate response
+  function my_contact_form_generate_response($type, $message){
+
+    global $response;
+
+    if($type == "success") $response = "<div class='success'>{$message}</div>";
+    else $response = "<div class='error'>{$message}</div>";
+
+  }
+
+  //response messages
+  $not_human       = "Human verification incorrect.";
+  $missing_content = "Please supply all information.";
+  $email_invalid   = "Email Address Invalid.";
+  $message_unsent  = "Message was not sent. Try Again.";
+  $message_sent    = "Thanks! Your message has been sent.";
+
+  //user posted variables
+  $name = $_POST['message_name'];
+  $email = $_POST['message_email'];
+  $message = $_POST['message_text'];
+  $human = $_POST['message_human'];
+
+  //php mailer variables
+  $to = get_option('admin_email');
+  $subject = "Someone sent a message from ".get_bloginfo('name');
+  $headers = 'From: '. $email . "\r\n" .
+    'Reply-To: ' . $email . "\r\n";
+
+  if(!$human == 0){
+    if($human != 2) my_contact_form_generate_response("error", $not_human); //not human!
+    else {
+
+      //validate email
+      if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+        my_contact_form_generate_response("error", $email_invalid);
+      else //email is valid
+      {
+        //validate presence of name and message
+        if(empty($name) || empty($message)){
+          my_contact_form_generate_response("error", $missing_content);
+        }
+        else //ready to go!
+        {
+          $sent = wp_mail($to, $subject, strip_tags($message), $headers);
+          if($sent) my_contact_form_generate_response("success", $message_sent); //message sent!
+          else my_contact_form_generate_response("error", $message_unsent); //message wasn't sent
+        }
+      }
+    }
+  }
+  else if ($_POST['submitted']) my_contact_form_generate_response("error", $missing_content);
+
 get_header(); ?>
 </header><!-- .site-header -->
 
@@ -60,72 +118,124 @@ get_header(); ?>
 				//get_template_part( 'template-parts/content', 'page' );
 			//endwhile;
 		?>
-			<?php // Define custom fields
-				$headline = get_field('headline');
-				$tagline = get_field('tagline');
-				$btntxt = get_field('go_to_button_txt');
-				$btnurl = get_field('go_to_button_url'); ?>
 
-				<?php // headline
-					if ($headline) {
-						// Create container around static section if the headline field has content
-						echo '<section class="static">';
-						echo "<h2>";
-						echo $headline;
-						echo "</h2>";
-					} ?>
+			<div class="options">
+				<div class="option property">
+					<div class="inner">
+						<h3>Property/Casualty</h3>
+						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_PropertyCasualty2_PropertyCasualty.jpg" width="125" />
+					</div>
+				</div>
+				<div class="option retirement">
+					<div class="inner">
+						<h3>Retirement Services</h3>
+						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_Retirement.jpg" width="125" />
+					</div>
+				</div>
+				<div class="option group">
+					<div class="inner">
+						<h3>Group Benefits</h3>
+						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_Group-Benefits.jpg" width="125" />
+					</div>
+				</div>
+			</div>
 
-				<?php // tagline
-					if ($tagline) {
-						echo "<p class='tagline'>";
-						echo $tagline;
-						echo "</p>";
-					} ?>
+			<style type="text/css">
+			  .error{
+			    padding: 5px 9px;
+			    border: 1px solid red;
+			    color: red;
+			    border-radius: 3px;
+			  }
+			 
+			  .success{
+			    padding: 5px 9px;
+			    border: 1px solid green;
+			    color: green;
+			    border-radius: 3px;
+			  }
+			 
+			  form span{
+			    color: red;
+			  }
+			</style>
+			 
+			<div class="home-form" id="prop-form" style="display: none;">
+			  <a class="back" href="#">Back</a>
+			  <?php echo $response; ?>
+			  <form action="<?php the_permalink(); ?>" method="post">
+			  	<div class="dropdown">
+			  		<label for "employees"># of Employees:</label>
+			  		<select name="employees" id="employees">
+			  			<option value="" disabled selected>Select your option</option>
+			  			<option value="Option 1">Option 1</option>
+			  			<option value="Option 1">Option 2</option>
+			  			<option value="Option 1">Option 3</option>
+			  			<option value="Option 1">Option 4</option>
+			  		</select>
+			  	</div>
+			  	<div class="rest" style="display: none;">
+				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
+				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
+				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
+				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
+				    <input type="hidden" name="submitted" value="1">
+				    <p><input type="submit"></p>
+				</div>
+			  </form>
+			</div>
 
-				<?php // button
-					if ($btntxt) {
-						echo "<a class='button' href=";
-						echo $btnurl;
-						echo ">";
-						echo $btntxt;
-						echo "</a>";
-					} ?>
+			<div class="home-form" id="ret-form" style="display: none;">
+			  <a class="back" href="#">Back</a>
+			  <?php echo $response; ?>
+			  <form action="<?php the_permalink(); ?>" method="post">
+			  	<div class="dropdown">
+			  		<label for "revenue">$ revenue:</label>
+			  		<select name="revenue" id="revenue">
+			  			<option value="" disabled selected>Select your option</option>
+			  			<option value="Option 1">Option 1</option>
+			  			<option value="Option 1">Option 2</option>
+			  			<option value="Option 1">Option 3</option>
+			  			<option value="Option 1">Option 4</option>
+			  		</select>
+			  	</div>
+			  	<div class="rest" style="display: none;">
+				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
+				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
+				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
+				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
+				    <input type="hidden" name="submitted" value="1">
+				    <p><input type="submit"></p>
+				</div>
+			  </form>
+			</div>
 
-				<?php if ($headline) {
-					// Close the container around the static section
-					echo '</section>';
-				} ?>
+			<div class="home-form" id="group-form" style="display: none;">
+			  <a class="back" href="#">Back</a>
+			  <?php echo $response; ?>
+			  <form action="<?php the_permalink(); ?>" method="post">
+			  	<div class="dropdown">
+			  		<label for "naics"># of Employees:</label>
+			  		<select name="naics" id="naics">
+			  			<option value="" disabled selected>Select your option</option>
+			  			<option value="Option 1">Option 1</option>
+			  			<option value="Option 1">Option 2</option>
+			  			<option value="Option 1">Option 3</option>
+			  			<option value="Option 1">Option 4</option>
+			  		</select>
+			  	</div>
+			  	<div class="rest" style="display: none;">
+				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
+				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
+				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
+				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
+				    <input type="hidden" name="submitted" value="1">
+				    <p><input type="submit"></p>
+				</div>
+			  </form>
+			</div>
 
 		</div></div></div><?php if ( $shadow ) { echo '<hr class="shadow"/>'; } ?></section>
-
-		<!--<?php
-		// Set up the objects needed
-		//$my_wp_query = new WP_Query();
-		//$all_wp_pages = $my_wp_query->query(array('post_type' => 'page','order' => 'ASC','orderby' => 'menu_order'));
-
-		// Get the page as an Object
-		//$home = get_option('page_on_front');
-		//$home_children = get_page_children( $home, $all_wp_pages );
-
-		//foreach ($home_children as $home_child) {
-			//$id = $home_child->ID;
-			//$slug = $home_child->post_name;
-			//$url = wp_get_attachment_image_src( get_post_thumbnail_id( $id ), "full" )[0];
-			//$bg = get_post_meta( $id, 'bgcolor', true );
-			//$color = get_post_meta( $id, 'textcolor', true );
-			//$shadow = get_post_meta( $id, 'shadow', true );
-			//?>
-			<section><div id="<?php echo $slug; ?>" class="background"
-			<?php// if ( $url || $bg ) {
-				//echo 'style="';
-					//if ( $url ) { echo 'background-image: url('. $url .');'; }
-					//if ( $bg ) { echo ' background-color:'. $bg .';'; }
-					//if ( $color ) { echo ' color:'. $color .';'; }
-				//echo '"';
-			//} ?>><div class="site-inner">
-				<?php //echo apply_filters('the_content', $home_child->post_content); ?>
-			</div><?php //if ( $shadow ) { echo '<div class="shadow"></div>'; } ?></div></section>
-		<?php //} ?>-->
 
 		<?php // queue the services
 

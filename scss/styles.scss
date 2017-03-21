@@ -209,6 +209,13 @@ p {
 					}
 				}
 			}
+			.options {
+				display: flex;
+				text-align: center;
+				.option {
+					flex: 1;
+				}
+			}
 		}
 	}
 }
