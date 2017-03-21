@@ -13,7 +13,7 @@ COMMENCE ADMIN PAGE FUNCTIONS
 */
 
 // add enqueue scripts for my ajax and javascript
-add_action( 'wp_enqueue_scripts', 'office_details_scripts' );
+add_action( 'wp_admin_enqueue_scripts', 'office_details_scripts' );
 function office_details_scripts() {
 	wp_enqueue_script( 'cmr-script', get_template_directory_uri() . '/js/cmr-scripts.js' );
 	//wp_localize_script( 'cmr-script', 'cmr_ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
@@ -28,11 +28,54 @@ function add_office_details_page() {
 
 // function for populating the page that displays office details and sends bulk emails
 function populate_office_page() {
-
+	wp_enqueue_script( 'cmr-script', get_template_directory_uri() . '/js/cmr-scripts.js' );
 	?>
 
 	<div class="office-wrap">
 		<h2>Welcome to the office details page!</h2>
+
+		<p>Service Type</p>
+		<select id="service-selector">
+			<option value="">Select a Service</option>
+			<option value="GB">GB</option>
+			<option value="PC">PC</option>
+			<option value="MM">MM</option>
+		</select>
+
+		<div id="gb-option" style="display:none;">
+			<p>Number of Employees</p>
+			<select id="employee-selector">
+			<?php
+				$numEmployees = getNumEmployees();
+				for( $cntr=0; $cntr < count($numEmployees); $cntr++ ) {
+					// perform three replaces to make the value readable
+					$readable = formatEmployeeRange( $numEmployees[$cntr] );
+					echo "<option value='" . $numEmployees[$cntr] . "'>" . $readable . "</option>";
+				}
+				/*foreach( $numEmployees as $col ) {
+					echo "<option value='" . $col > "'>" . $col . "</option>";
+				}*/
+				?>
+			</select>
+		</div>
+
+		<div id="pc-option" style="display:none;">
+			<p>NAICS Categories</p>
+			<select id="naics-cat-selector">
+				<?php
+				$naicsCats = getCatNAICS();
+				foreach( $naicsCats as $cat ) {
+					echo "<option value='" . $cat['naics_category_id'] . "'>" . $cat['naics_category_name'] . "</option>";
+				}
+				?>
+			</select>
+
+			<div id="pc-subcat"></div>
+		</div>
+
+		<div id="mm-option" style="display:none;">
+			<p>Show me what you got.</p>
+		</div>
 	</div>
 
 	<?php
@@ -87,6 +130,15 @@ function getNumEmployees() {
 	}
 
 	return $fieldsArray;
+}
+
+// function to format one of the employee ranges into a human readable format
+function formatEmployeeRange( $range ) {
+	$firstChange = str_replace( "f", "From ", $range );
+	$secondChange = str_replace( "t", " to ", $firstChange );
+	$thirdChange = str_replace( "over", "Over ", $secondChange );
+
+	return $thirdChange;
 }
 
 function getCatNAICS() {
