@@ -8,10 +8,9 @@ jQuery(document).ready(function($){
 	    }
 	}
 	preload(
-		"/wp-content/themes/business/img/formfill.jpg",
-		"/wp-content/themes/business/img/prop-casualty.jpg",
-		"/wp-content/themes/business/img/group.jpg",
-		"/wp-content/themes/business/img/retirement.jpg"
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/prop-casualty.jpg",
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/group.jpg",
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/retirement.jpg"
 	)
 	// Define actions for each form icon
 	$('.option.property .inner').click(function() {

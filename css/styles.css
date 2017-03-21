@@ -166,15 +166,15 @@ p {
 }
 /* line 180, ../scss/styles.scss */
 .site-content section .background.property {
-  background-image: url("/wp-content/themes/business/img/prop-casualty.jpg") !important;
+  background-image: url("http://design.brafton.com/cmr/wp-content/uploads/2017/03/prop-casualty.jpg") !important;
 }
 /* line 183, ../scss/styles.scss */
 .site-content section .background.group {
-  background-image: url("/wp-content/themes/business/img/group.jpg") !important;
+  background-image: url("http://design.brafton.com/cmr/wp-content/uploads/2017/03/group.jpg") !important;
 }
 /* line 186, ../scss/styles.scss */
 .site-content section .background.retirement {
-  background-image: url("/wp-content/themes/business/img/retirement.jpg") !important;
+  background-image: url("http://design.brafton.com/cmr/wp-content/uploads/2017/03/retirement.jpg") !important;
 }
 /* line 189, ../scss/styles.scss */
 .site-content section .background .overlay {

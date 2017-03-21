@@ -178,13 +178,13 @@ p {
 		.background {
 			transition: .7s all;
 			&.property {
-				background-image: url('/wp-content/themes/business/img/prop-casualty.jpg')!important;
+				background-image: url('http://design.brafton.com/cmr/wp-content/uploads/2017/03/prop-casualty.jpg')!important;
 			}
 			&.group {
-				background-image: url('/wp-content/themes/business/img/group.jpg')!important;
+				background-image: url('http://design.brafton.com/cmr/wp-content/uploads/2017/03/group.jpg')!important;
 			}
 			&.retirement {
-				background-image: url('/wp-content/themes/business/img/retirement.jpg')!important;
+				background-image: url('http://design.brafton.com/cmr/wp-content/uploads/2017/03/retirement.jpg')!important;
 			}
 			.overlay {
 				background-color: rgba($dkblue, 0.5);
