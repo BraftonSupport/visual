@@ -35,60 +35,77 @@ function populate_office_page() {
 		.office-wrap #office-detail-table tr:nth-child(even) {
 			background-color: #FFFFFF;
 		}
-		.office-wrap #office-detail-table tr {
+		.office-wrap #office-detail-table tr td {
 			border-bottom: 1px solid #000000;
+			border-right: 1px solid #000000;
+		}
+		#option-holder {
+			display: flex;
+			margin-bottom: 30px;
+		}
+		#show-office-info-btn p {
+		    font-size: 26px;
+		    padding: 15px;
+		    cursor: pointer;
+		}
+		#option-holder p {
+			font-weight: bold;
 		}
 	</style>
 
 	<div class="office-wrap">
 		<h2>Welcome to the office details page!</h2>
 
-		<p>Service Type</p>
-		<select id="service-selector">
-			<option value="">Select a Service</option>
-			<option value="GB">GB</option>
-			<option value="PC">PC</option>
-			<option value="MM">MM</option>
-		</select>
+		<div id="option-holder">
+			<div id="service-option">
+				<p>Service Type</p>
+				<select id="service-selector">
+					<option value="">Select a Service</option>
+					<option value="GB">GB</option>
+					<option value="PC">PC</option>
+					<option value="MM">MM</option>
+				</select>
+			</div>
 
-		<div id="gb-option" style="display:none;">
-			<p>Number of Employees</p>
-			<select id="employee-selector">
-			<?php
-				$numEmployees = getNumEmployees();
-				for( $cntr=0; $cntr < count($numEmployees); $cntr++ ) {
-					// perform three replaces to make the value readable
-					$readable = formatEmployeeRange( $numEmployees[$cntr] );
-					echo "<option value='" . $numEmployees[$cntr] . "'>" . $readable . "</option>";
-				}
-				/*foreach( $numEmployees as $col ) {
-					echo "<option value='" . $col > "'>" . $col . "</option>";
-				}*/
-				?>
-			</select>
-		</div>
-
-		<div id="pc-option" style="display:none;">
-			<p>NAICS Categories</p>
-			<select id="naics-cat-selector">
-				<option value="">Select a Category</option>
+			<div id="gb-option" style="display:none;">
+				<p>Number of Employees</p>
+				<select id="employee-selector">
 				<?php
-				$naicsCats = getCatNAICS();
-				foreach( $naicsCats as $cat ) {
-					echo "<option value='" . $cat['naics_category_id'] . "'>" . $cat['naics_category_name'] . "</option>";
-				}
-				?>
-			</select>
+					$numEmployees = getNumEmployees();
+					for( $cntr=0; $cntr < count($numEmployees); $cntr++ ) {
+						// perform three replaces to make the value readable
+						$readable = formatEmployeeRange( $numEmployees[$cntr] );
+						echo "<option value='" . $numEmployees[$cntr] . "'>" . $readable . "</option>";
+					}
+					/*foreach( $numEmployees as $col ) {
+						echo "<option value='" . $col > "'>" . $col . "</option>";
+					}*/
+					?>
+				</select>
+			</div>
 
-			<div id="pc-subcat"></div>
-		</div>
+			<div id="pc-option" style="display:none;">
+				<p>NAICS Categories</p>
+				<select id="naics-cat-selector">
+					<option value="">Select a Category</option>
+					<?php
+					$naicsCats = getCatNAICS();
+					foreach( $naicsCats as $cat ) {
+						echo "<option value='" . $cat['naics_category_id'] . "'>" . $cat['naics_category_name'] . "</option>";
+					}
+					?>
+				</select>
 
-		<div id="mm-option" style="display:none;">
-			<p>Show me what you got.</p>
-		</div>
+				<div id="pc-subcat"></div>
+			</div>
 
-		<div id="show-office-info-btn">
-			<p>Fetch Offices</p>
+			<div id="mm-option" style="display:none;">
+				<p>Show me what you got.</p>
+			</div>
+
+			<div id="show-office-info-btn">
+				<p>Fetch Offices</p>
+			</div>
 		</div>
 
 		<div id="office-table-holder"></div>
@@ -273,7 +290,6 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	}
 
 	// string converted array of IDs, to be used in a MySQL 'IN' statement
-	//printDat($officeIDs);
 	$inString = implode( ',', $officeIDs );
 	// variables to contain table names
 	$office = "tbl_br_office";
