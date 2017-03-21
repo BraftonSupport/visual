@@ -43,14 +43,31 @@ if ( !$video ) {
   //user posted variables
   $name = $_POST['message_name'];
   $email = $_POST['message_email'];
-  $message = $_POST['message_text'];
   $human = $_POST['message_human'];
+  $option = $_POST['message_options'];
 
   //php mailer variables
-  $to = get_option('admin_email');
+  $to = "gregory.rich@brafton.com";
   $subject = "Someone sent a message from ".get_bloginfo('name');
-  $headers = 'From: '. $email . "\r\n" .
-    'Reply-To: ' . $email . "\r\n";
+
+  $message = "<h1>Here's a successful email submission.</h1>";
+  $message .= "<ul>";
+  $message .= "<li>Name: " . $name . "</li>";
+  $message .= "<li>Email: " . $email . "</li>";
+  $message .= "<li>Option: " . $option . "</li>";
+  $message .= "</ul>";
+
+  $header = "From:gregory.rich@brafton.com \r\n";
+  $header .= "MIME-Version: 1.0\r\n";
+  $header .= "Content-type: text/html\r\n";
+
+  //$mailResult = mail( $to, $subject, $message, $header );
+
+  //if ( $mailResult == true ) {
+    //echo "Message sent successfully";
+  //} else {
+    //echo "Message failed to send";
+  //}
 
   if(!$human == 0){
     if($human != 2) my_contact_form_generate_response("error", $not_human); //not human!
@@ -61,13 +78,13 @@ if ( !$video ) {
         my_contact_form_generate_response("error", $email_invalid);
       else //email is valid
       {
-        //validate presence of name and message
-        if(empty($name) || empty($message)){
+        //validate presence of name
+        if(empty($name)){
           my_contact_form_generate_response("error", $missing_content);
         }
         else //ready to go!
         {
-          $sent = wp_mail($to, $subject, strip_tags($message), $headers);
+          $sent = wp_mail($to, $subject, $message, $headers);
           if($sent) my_contact_form_generate_response("success", $message_sent); //message sent!
           else my_contact_form_generate_response("error", $message_unsent); //message wasn't sent
         }
@@ -122,20 +139,20 @@ get_header(); ?>
 			<div class="options">
 				<div class="option property">
 					<div class="inner">
+						<div class="thumb" style="background-image: url('<?php echo get_site_url(); ?>/wp-content/uploads/2017/02/Icons_PropertyCasualty2_PropertyCasualty.jpg');"></div>
 						<h3>Property/Casualty</h3>
-						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_PropertyCasualty2_PropertyCasualty.jpg" width="125" />
-					</div>
-				</div>
-				<div class="option retirement">
-					<div class="inner">
-						<h3>Retirement Services</h3>
-						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_Retirement.jpg" width="125" />
 					</div>
 				</div>
 				<div class="option group">
 					<div class="inner">
+						<div class="thumb" style="background-image: url('<?php echo get_site_url(); ?>/wp-content/uploads/2017/02/Icons_Group-Benefits.jpg');"></div>
 						<h3>Group Benefits</h3>
-						<img src="http://crm.dev:2300/wp-content/uploads/2017/02/Icons_Group-Benefits.jpg" width="125" />
+					</div>
+				</div>
+				<div class="option retirement">
+					<div class="inner">
+						<div class="thumb" style="background-image: url('<?php echo get_site_url(); ?>/wp-content/uploads/2017/02/Icons_Retirement.jpg');"></div>
+						<h3>Retirement Services</h3>
 					</div>
 				</div>
 			</div>
@@ -159,25 +176,30 @@ get_header(); ?>
 			    color: red;
 			  }
 			</style>
-			 
+
+			<?php echo $response; ?>
+			
+			<!-- MM form -->
 			<div class="home-form" id="prop-form" style="display: none;">
-			  <a class="back" href="#">Back</a>
-			  <?php echo $response; ?>
 			  <form action="<?php the_permalink(); ?>" method="post">
 			  	<div class="dropdown">
-			  		<label for "employees"># of Employees:</label>
-			  		<select name="employees" id="employees">
+			  		<a class="button back" href="#">&laquo; Back</a>
+			  		<label for "employees">Number of Employees:</label>
+			  		<select name="message_options" id="employees">
 			  			<option value="" disabled selected>Select your option</option>
-			  			<option value="Option 1">Option 1</option>
-			  			<option value="Option 1">Option 2</option>
-			  			<option value="Option 1">Option 3</option>
-			  			<option value="Option 1">Option 4</option>
+			  			<?php $lives = getNumEmployees();
+				  			foreach ($lives as $life => $value) {
+				  				print "<option value='" . $value . "'>" . formatEmployeeRange($value) . "</option>";
+				  			}
+			  			?>
 			  		</select>
+			  		<a class="button next" href="#">Next &raquo;</a>
 			  	</div>
 			  	<div class="rest" style="display: none;">
+			  		<a class="button drop-back" href="#">&laquo; Back</a>
 				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
 				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
+				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
 				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
 				    <input type="hidden" name="submitted" value="1">
 				    <p><input type="submit"></p>
@@ -185,55 +207,61 @@ get_header(); ?>
 			  </form>
 			</div>
 
-			<div class="home-form" id="ret-form" style="display: none;">
-			  <a class="back" href="#">Back</a>
-			  <?php echo $response; ?>
-			  <form action="<?php the_permalink(); ?>" method="post">
-			  	<div class="dropdown">
-			  		<label for "revenue">$ revenue:</label>
-			  		<select name="revenue" id="revenue">
-			  			<option value="" disabled selected>Select your option</option>
-			  			<option value="Option 1">Option 1</option>
-			  			<option value="Option 1">Option 2</option>
-			  			<option value="Option 1">Option 3</option>
-			  			<option value="Option 1">Option 4</option>
-			  		</select>
-			  	</div>
-			  	<div class="rest" style="display: none;">
-				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
-				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
-				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
-				    <input type="hidden" name="submitted" value="1">
-				    <p><input type="submit"></p>
-				</div>
-			  </form>
-			</div>
-
+			<!-- GB form -->
 			<div class="home-form" id="group-form" style="display: none;">
-			  <a class="back" href="#">Back</a>
-			  <?php echo $response; ?>
 			  <form action="<?php the_permalink(); ?>" method="post">
 			  	<div class="dropdown">
-			  		<label for "naics"># of Employees:</label>
-			  		<select name="naics" id="naics">
+			  		<a class="back button" href="#">&laquo; Back</a>
+			  		<label for "naics">Amount of Revenue/year($):</label>
+			  		<select name="message_options" id="naics">
 			  			<option value="" disabled selected>Select your option</option>
 			  			<option value="Option 1">Option 1</option>
 			  			<option value="Option 1">Option 2</option>
 			  			<option value="Option 1">Option 3</option>
 			  			<option value="Option 1">Option 4</option>
 			  		</select>
+			  		<a class="button next" href="#">Next &raquo;</a>
 			  	</div>
 			  	<div class="rest" style="display: none;">
+			  		<a class="drop-back button" href="#">&laquo; Back</a>
 				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
 				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="message_text">Message: <span>*</span> <br><textarea type="text" name="message_text"><?php echo esc_textarea($_POST['message_text']); ?></textarea></label></p>
+				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
 				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
 				    <input type="hidden" name="submitted" value="1">
 				    <p><input type="submit"></p>
 				</div>
 			  </form>
 			</div>
+
+			<!-- PC form -->
+			<div class="home-form" id="ret-form" style="display: none;">
+			  <form action="<?php the_permalink(); ?>" method="post" enctype="multipart/form-data">
+			  	<div class="dropdown">
+			  		<a class="back button" href="#">&laquo; Back</a>
+			  		<label for "revenue">NAICS Type:</label>
+			  		<select name="message_options" id="revenue">
+			  			<option value="" disabled selected>Select your option</option>
+			  			<?php $cats = getCatNAICS();
+				  			foreach ($cats as $cat => $value) {
+				  				print "<option value='" . $value['naics_category_name'] . "'>" . $value['naics_category_name'] . "</option>";
+				  			}
+			  			?>
+			  		</select>
+			  		<a class="button next" href="#">Next &raquo;</a>
+			  	</div>
+			  	<div class="rest" style="display: none;">
+			  		<a class="drop-back button" href="#">&laquo; Back</a>
+				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
+				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
+				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
+				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
+				    <input type="hidden" name="submitted" value="1">
+				    <p><input type="submit"></p>
+				</div>
+			  </form>
+			</div>
+			<!-- end forms -->
 
 		</div></div></div><?php if ( $shadow ) { echo '<hr class="shadow"/>'; } ?></section>
 

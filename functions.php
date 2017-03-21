@@ -844,3 +844,19 @@ function team_shortcode() {
 add_shortcode('team', 'team_shortcode');
 
 add_image_size( 'team', 250, 250, array( 'center', 'center' ) );
+
+/* File upload for homepage form */
+
+function insert_attachment($file_handler,$post_id, $setthumb='false') {
+
+  // check to make sure its a successful upload
+  if ($_FILES[$file_handler]['error'] !== UPLOAD_ERR_OK) __return_false();
+
+  require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+  require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+  require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+  $attach_id = wp_handle_upload( $file_handler, $post_id );
+
+  return $attach_id;
+}

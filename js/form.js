@@ -1,10 +1,26 @@
 jQuery(document).ready(function($){
+	// Preload background images 
+	var images = [];
+	function preload() {
+	    for (var i = 0; i < arguments.length; i++) {
+	        images[i] = new Image();
+	        images[i].src = preload.arguments[i];
+	    }
+	}
+	preload(
+		"/wp-content/themes/business/img/formfill.jpg",
+		"/wp-content/themes/business/img/prop-casualty.jpg",
+		"/wp-content/themes/business/img/group.jpg",
+		"/wp-content/themes/business/img/retirement.jpg"
+	)
+	// Define actions for each form icon
 	$('.option.property .inner').click(function() {
 		$('#prop-form').show();
 		$(this).hide();
 		$('.option.group').hide();
 		$('.option.retirement').hide();
 		$('#prop-form').fadeIn();
+		$('.background').addClass('property');
 	});
 	$('.option.retirement .inner').click(function() {
 		$('#ret-form').show();
@@ -12,6 +28,7 @@ jQuery(document).ready(function($){
 		$('.option.property').hide();
 		$('.option.group').hide();
 		$('#ret-form').fadeIn();
+		$('.background').addClass('retirement');
 	});
 	$('.option.group .inner').click(function() {
 		$('#group-form').show();
@@ -19,10 +36,25 @@ jQuery(document).ready(function($){
 		$('.option.property').hide();
 		$('.option.retirement').hide();
 		$('#group-form').fadeIn();
+		$('.background').addClass('group');
 	});
+	// Reset everything when the user clicks the back button
 	$('a.back').click(function() {
 		$('.home-form').hide();
 		$('.option .inner').fadeIn();
 		$('.option').fadeIn();
+		$('.background').removeClass('property');
+		$('.background').removeClass('retirement');
+		$('.background').removeClass('group');
+	});
+	// Hide the last step of the form when user presses second back button
+	$('a.drop-back').click(function() {
+		$('.rest').hide();
+		$('.dropdown').fadeIn();
+	});
+	// Display the last step of the form; hide dropdown
+	$('a.next').click(function() {
+		$('.dropdown').hide();
+		$('.rest').fadeIn();
 	});
 });
