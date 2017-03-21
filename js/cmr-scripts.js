@@ -21,4 +21,28 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	// launch ajax call when naics-cat-selector changes
+	$("#naics-cat-selector").change( function(){
+		var selectedCat = $("#naics-cat-selector").val();
+		populateNAICS( selectedCat );
+	});
+
 });
+
+// AJAX call to populate industries in a given category
+function populateNAICS( cat ) {
+	console.log("loading industries!");
+	var naicsData = {
+		naicsCat : cat
+	};
+	var toPass = {
+		action	: "get_naics",
+		data    : naicsData
+	};
+
+	// make the call
+	jQuery.post( ajaxurl, toPass ).done( function(res) {
+		console.log(res);
+		jQuery("#pc-subcat").html(res);
+	});
+}

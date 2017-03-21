@@ -27,11 +27,13 @@ printDat(getNumEmployees());
 
 //printDat($industry);
 
-echo "<h3>testing getOfficeInfo using getPCOfficeIDs(111336)</h3>";
+getNAICS( 50 );
 
-$officeIDs = getPCOfficeIDs( 111336 );
+//echo "<h3>testing getOfficeInfo using getPCOfficeIDs(111336)</h3>";
 
-getOfficeInfo( $officeIDs, "PC" );
+//$officeIDs = getPCOfficeIDs( 111336 );
+
+//getOfficeInfo( $officeIDs, "PC" );
 
 ?>
 

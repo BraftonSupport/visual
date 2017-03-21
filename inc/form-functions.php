@@ -62,6 +62,7 @@ function populate_office_page() {
 		<div id="pc-option" style="display:none;">
 			<p>NAICS Categories</p>
 			<select id="naics-cat-selector">
+				<option value="">Select a Category</option>
 				<?php
 				$naicsCats = getCatNAICS();
 				foreach( $naicsCats as $cat ) {
@@ -159,6 +160,10 @@ function getCatNAICS() {
 
 // function to grab NAICS, based on the passed in category id
 function getNAICS( $id ) {
+	// check if we have an ID...if not, this is an AJAX call
+	if ( $id == null ) {
+		$id = $_POST['data']['naicsCat'];
+	}
 	$conn = establish_connection();
 	$table = "naics";
 	$query = "SELECT id, name FROM $table WHERE naics_category_id = $id";
@@ -171,7 +176,21 @@ function getNAICS( $id ) {
 		$industries[] = $row;
 	}
 
-	return $industries;
+	//return $industries;
+
+	// build out a select list, echo it out
+	$html = "";
+	$html .= "<select id='naics-selector'>";
+	foreach( $industries as $industry) {
+		$html .= "<option value='" . $industry['id'] . "'>" . $industry['name'] . "</option>";
+	}
+	$html .= "</select>";
+
+	echo $html;
+
+	if ( $_POST ) {
+		wp_die();
+	}
 }
 //add_action( "wp_ajax_nopriv_get_naics", "getNAICS" );
 add_action( "wp_ajax_get_naics", "getNAICS" );
