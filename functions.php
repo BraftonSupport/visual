@@ -229,6 +229,8 @@ function yttheme_enqueuingallthethings() {
 	}
 
 	wp_enqueue_script( 'theme', get_template_directory_uri() . '/js/theme.js', array(), '1.0.0', true );
+
+	wp_enqueue_script( 'form', get_template_directory_uri() . '/js/form.js', array(), '1.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'yttheme_enqueuingallthethings' );
 
