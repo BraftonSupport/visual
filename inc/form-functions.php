@@ -77,6 +77,12 @@ function populate_office_page() {
 		<div id="mm-option" style="display:none;">
 			<p>Show me what you got.</p>
 		</div>
+
+		<div id="show-office-info-btn">
+			<p>Fetch Offices</p>
+		</div>
+
+		<div id="office-table-holder"></div>
 	</div>
 
 	<?php
@@ -240,8 +246,25 @@ add_action( "wp_ajax_get_pc_ids", "getPCOfficeIDs" );
 // function to grab office details
 // takes an office ID and servicetypeid (of either GB, MM or PC), and stiches together two or three tables to build out an array of offices with what details are available
 // returns an array of row data...what each row contains, I've yet to fully establish
-function getOfficeInfo( $officeIDs, $service ) {
+function getOfficeInfo( $officeIDs, $service = null) {
+	// check if $services is null...if so, assume this is AJAX, pull data from $_POST
+	if ( $service == null ) {
+		$service = $_POST['data']['service'];
+		switch ( $service ) {
+			case 'PC':
+				$officeIDs = getPCOfficeIDs( $_POST['data']['naics'] );
+				break;
+			case 'GB':
+				$officeIDs = getGBOfficeIDs( $_POST['data']['employee'] );
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
+
 	// string converted array of IDs, to be used in a MySQL 'IN' statement
+	//printDat($officeIDs);
 	$inString = implode( ',', $officeIDs );
 	// variables to contain table names
 	$office = "tbl_br_office";
@@ -266,19 +289,51 @@ function getOfficeInfo( $officeIDs, $service ) {
 	// lastly, string all that together into a single query
 	$query .= "SELECT " . $officeSelect . ", " . $contactSelect . " " . $from . " " . $where;
 
-	printDat( $query );
+	//printDat( $query );
 
 	$conn = establish_connection();
 
 	$res = $conn->query( $query );
-	//printDat($res);
 	$offices = array();
 
-	while( $row = $res->fetch_assoc() ) {
+	/*while( $row = $res->fetch_assoc() ) {
 		$offices[] = $row;
+	}*/
+
+	//return $offices;
+
+	// generate an HTML table to display office details
+	$html = "<table>";
+	// top row, for column labels
+	$html .= "<tr>";
+	$html .= "<td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td>";
+	$html .= "</tr>";
+
+	// iterate through result set, building a row per item in results
+	while( $row = $res->fetch_assoc() ) {
+		$html .= "<tr>";
+		$html .= "<td>".$row['companyname']."</td>";
+		$html .= "<td>".$row['address1']."</td>";
+		$html .= "<td>".$row['address2']."</td>";
+		$html .= "<td>".$row['city']."</td>";
+		$html .= "<td>".$row['state']."</td>";
+		$html .= "<td>".$row['zip']."</td>";
+		$html .= "<td>".$row['country']."</td>";
+		$html .= "<td>".$row['maincontact']."</td>";
+		$html .= "<td>".$row['website']."</td>";
+		$html .= "<td>".$row['email']."</td>";
+		$html .= "<td>".$row['telephone']."</td>";
+		$html .= "<td>".$row['fax']."</td>";
+		$html .= "</tr>";
 	}
 
-	return $offices;
+	$html .= "</table>";
+
+	echo $html;
+
+	if( $_POST ) {
+		wp_die();
+	}
 }
 //add_action( "wp_ajax_nopriv_get_office", "getOfficeInfo" );
 add_action( "wp_ajax_get_office", "getOfficeInfo" );

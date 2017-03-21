@@ -8,7 +8,9 @@ get_header();
 
 <?php
 
-printDat(getNumEmployees());
+$result = getGBOfficeIDs('f1t100');
+printDat( $result );
+//printDat(getNumEmployees());
 
 //echo "<h3>Testing getNAICS</h3>";
 //$catNAICS = getCatNAICS();
@@ -27,13 +29,15 @@ printDat(getNumEmployees());
 
 //printDat($industry);
 
-getNAICS( 50 );
+//getNAICS( 50 );
 
 //echo "<h3>testing getOfficeInfo using getPCOfficeIDs(111336)</h3>";
 
-//$officeIDs = getPCOfficeIDs( 111336 );
+$officeIDs = getPCOfficeIDs( 111336 );
 
-//getOfficeInfo( $officeIDs, "PC" );
+getOfficeInfo( $officeIDs, "PC" );
+
+
 
 ?>
 
