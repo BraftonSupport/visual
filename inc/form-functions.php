@@ -32,8 +32,11 @@ function populate_office_page() {
 	?>
 
 	<style>
-		.office-wrap #office-detail-table tr:nth-child(even) {
+		.office-wrap #office-detail-table tr:nth-child(odd) {
 			background-color: #FFFFFF;
+		}
+		.office-wrap #office-detail-table tr:nth-child(even) {
+			background-color: #BBBBBB;
 		}
 		.office-wrap #office-detail-table tr td {
 			border-bottom: 1px solid #000000;
@@ -77,9 +80,6 @@ function populate_office_page() {
 						$readable = formatEmployeeRange( $numEmployees[$cntr] );
 						echo "<option value='" . $numEmployees[$cntr] . "'>" . $readable . "</option>";
 					}
-					/*foreach( $numEmployees as $col ) {
-						echo "<option value='" . $col > "'>" . $col . "</option>";
-					}*/
 					?>
 				</select>
 			</div>
@@ -329,13 +329,14 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	// generate an HTML table to display office details
 	$html = "<table id='office-detail-table'>";
 	// top row, for column labels
-	$html .= "<tr>";
-	$html .= "<td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td>";
+	$html .= "<tr style='font-weight:bold;'>";
+	$html .= "<td></td><td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td>";
 	$html .= "</tr>";
 
 	// iterate through result set, building a row per item in results
 	while( $row = $res->fetch_assoc() ) {
 		$html .= "<tr>";
+		$html .= "<td><input type='checkbox' name='office-row' value='".$row['email']."' /></td>";
 		$html .= "<td>".$row['companyname']."</td>";
 		$html .= "<td>".$row['address1']."</td>";
 		$html .= "<td>".$row['address2']."</td>";
