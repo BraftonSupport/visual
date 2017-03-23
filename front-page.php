@@ -79,15 +79,15 @@ if ( !$video ) {
       else //email is valid
       {
         //validate presence of name
-        if(empty($name)){
-          my_contact_form_generate_response("error", $missing_content);
-        }
-        else //ready to go!
-        {
+        //if(empty($name)){
+          //my_contact_form_generate_response("error", $missing_content);
+        //}
+        //else //ready to go!
+        //{
           $sent = wp_mail($to, $subject, $message, $headers);
           if($sent) my_contact_form_generate_response("success", $message_sent); //message sent!
           else my_contact_form_generate_response("error", $message_unsent); //message wasn't sent
-        }
+        //}
       }
     }
   }
@@ -137,6 +137,13 @@ get_header(); ?>
 		?>
 
 			<div class="options">
+				<div class="text">
+					<h2>Overwhelmed by insurance confusion and expense?</h2>                 		
+					<p>Confused by retirement regulatory compliance and hidden fees?  Insurance costs keep increasing?</p>
+					<p>With CMR, you can easily navigate the complicated demands of commercial insurance and retirement programs.</p>
+					<p><strong>Click on one of the icons below to receive your confidential no-cost industry benchmark report:</strong></p>
+				</div>
+
 				<div class="option property">
 					<div class="inner">
 						<div class="thumb" style="background-image: url('<?php echo get_site_url(); ?>/wp-content/uploads/2017/02/Icons_PropertyCasualty2_PropertyCasualty.jpg');"></div>
@@ -157,117 +164,44 @@ get_header(); ?>
 				</div>
 			</div>
 
-			<style type="text/css">
-			  .error{
-			    padding: 5px 9px;
-			    border: 1px solid red;
-			    color: red;
-			    border-radius: 3px;
-			  }
-			 
-			  .success{
-			    padding: 5px 9px;
-			    border: 1px solid green;
-			    color: green;
-			    border-radius: 3px;
-			  }
-			 
-			  form span{
-			    color: red;
-			  }
-			</style>
-
-			<?php echo $response; ?>
-			
-			<!-- MM form -->
-			<div class="home-form" id="prop-form" style="display: none;">
-			  <form action="<?php the_permalink(); ?>" method="post">
-			  	<div class="dropdown">
-			  		<a class="button back" href="#">&laquo; Back</a>
-			  		<label for "employees">Number of Employees:</label>
-			  		<select name="message_options" id="employees">
-			  			<option value="" disabled selected>Select your option</option>
-			  			<?php $lives = getNumEmployees();
-				  			foreach ($lives as $life => $value) {
-				  				print "<option value='" . $value . "'>" . formatEmployeeRange($value) . "</option>";
-				  			}
-			  			?>
-			  		</select>
-			  		<a class="button next" href="#">Next &raquo;</a>
-			  	</div>
-			  	<div class="rest" style="display: none;">
-			  		<a class="button drop-back" href="#">&laquo; Back</a>
-				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
-				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
-				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
-				    <input type="hidden" name="submitted" value="1">
-				    <p><input type="submit"></p>
-				</div>
-			  </form>
-			</div>
-
-			<!-- GB form -->
-			<div class="home-form" id="group-form" style="display: none;">
-			  <form action="<?php the_permalink(); ?>" method="post">
-			  	<div class="dropdown">
-			  		<a class="back button" href="#">&laquo; Back</a>
-			  		<label for "naics">Amount of Revenue/year($):</label>
-			  		<select name="message_options" id="naics">
-			  			<option value="" disabled selected>Select your option</option>
-			  			<option value="Option 1">Option 1</option>
-			  			<option value="Option 1">Option 2</option>
-			  			<option value="Option 1">Option 3</option>
-			  			<option value="Option 1">Option 4</option>
-			  		</select>
-			  		<a class="button next" href="#">Next &raquo;</a>
-			  	</div>
-			  	<div class="rest" style="display: none;">
-			  		<a class="drop-back button" href="#">&laquo; Back</a>
-				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
-				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
-				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
-				    <input type="hidden" name="submitted" value="1">
-				    <p><input type="submit"></p>
-				</div>
-			  </form>
-			</div>
-
-			<!-- PC form -->
-			<div class="home-form" id="ret-form" style="display: none;">
-			  <form action="<?php the_permalink(); ?>" method="post" enctype="multipart/form-data">
-			  	<div class="dropdown">
-			  		<a class="back button" href="#">&laquo; Back</a>
-			  		<label for "revenue">NAICS Type:</label>
-			  		<select name="message_options" id="revenue">
-			  			<option value="" disabled selected>Select your option</option>
-			  			<?php $cats = getCatNAICS();
-				  			foreach ($cats as $cat => $value) {
-				  				print "<option value='" . $value['naics_category_name'] . "'>" . $value['naics_category_name'] . "</option>";
-				  			}
-			  			?>
-			  		</select>
-			  		<a class="button next" href="#">Next &raquo;</a>
-			  	</div>
-			  	<div class="rest" style="display: none;">
-			  		<a class="drop-back button" href="#">&laquo; Back</a>
-				    <p><label for="name">Name: <span>*</span> <br><input type="text" name="message_name" value="<?php echo esc_attr($_POST['message_name']); ?>"></label></p>
-				    <p><label for="message_email">Email: <span>*</span> <br><input type="text" name="message_email" value="<?php echo esc_attr($_POST['message_email']); ?>"></label></p>
-				    <p><label for="upload_file">Upload policy: <input type="file" name="upload_file"></label></p>
-				    <p><label for="message_human">Human Verification: <span>*</span> <br><input type="text" style="width: 60px;" name="message_human"> + 3 = 5</label></p>
-				    <input type="hidden" name="submitted" value="1">
-				    <p><input type="submit"></p>
-				</div>
-			  </form>
-			</div>
-			<!-- end forms -->
+			<?php include("inc/home-forms.php"); ?>
 
 		</div></div></div><?php if ( $shadow ) { echo '<hr class="shadow"/>'; } ?></section>
 
+		<div class="intro">
+			<div class="site-inner">
+				<h2>Working Around Your Schedule</h2>
+				<p>By outsourcing your procurement process to CMR, CFOs, procurement officers and business owners can access our vast repository of industry information and engage with leading industry thinkers.
+				The CMR Database®. By connecting to this new, easy-to-navigate digital platform, you will have the benefit of its continually updated content. This information includes data from thousands of broker/vendor specialists representing 120 countries. Millions of client program features are aggregated and compared in all industry sectors.
+				Despite a world of dealing with complex terminology, government protocols, high costs, broker/vendor solicitations,  there is a new and proven alternative option. You now can quickly attain new global benchmarking metrics, expanded market access, more inclusive market intelligence and even insurance for general liability for business. Long term relationships can also be strengthened and enhanced.</p>
+
+				<div class="row">
+					<div class="one-third">
+					 	<span class="large">Thousands</span><br />
+						Brokers & Vendors
+					</div>
+
+					<div class="one-third">
+						<span class="large">$120,000,000</span><br />
+						Savings in Industry Overcharges
+					</div>
+
+					<div class="one-third">
+						<span class="large">95%</span><br />
+						Client Success Rate
+					</div>
+				</div>
+
+				<p>The largest brokers/vendors only have a fraction of the overall available market. With CMR + PolicySmart®, your market entry points are expanded exponentially beyond the traditional localized effort.</p>
+				<p>So far our clients have enjoyed over $120 Million savings in industry overcharges through new and improved plan designs.  This was achieved with an impressive 95 percent success rate.
+				What are you waiting for? See how your company could save with our free, no-obligation platform.</p>
+				<p class="center"><a class="button" href="#">Start Now</a></p>
+			</div>
+		</div>
+
 		<?php // queue the services
 
-			$service_array = array('post_type' => 'services', 'posts_per_page' => '3');
+			$service_array = array('post_type' => 'services', 'posts_per_page' => -1);
 			$loop = new WP_QUERY ($service_array);
 
 			if ($loop->have_posts() ) :

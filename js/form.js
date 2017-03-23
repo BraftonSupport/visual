@@ -8,14 +8,15 @@ jQuery(document).ready(function($){
 	    }
 	}
 	preload(
-		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/prop-casualty.jpg",
-		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/group.jpg",
-		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/retirement.jpg"
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/property.jpeg",
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/group.jpeg",
+		"http://design.brafton.com/cmr/wp-content/uploads/2017/03/retirement.jpeg"
 	)
 	// Define actions for each form icon
 	$('.option.property .inner').click(function() {
 		$('#prop-form').show();
 		$(this).hide();
+		$('.text').hide();
 		$('.option.group').hide();
 		$('.option.retirement').hide();
 		$('#prop-form').fadeIn();
@@ -24,6 +25,7 @@ jQuery(document).ready(function($){
 	$('.option.retirement .inner').click(function() {
 		$('#ret-form').show();
 		$(this).hide();
+		$('.text').hide();
 		$('.option.property').hide();
 		$('.option.group').hide();
 		$('#ret-form').fadeIn();
@@ -32,6 +34,7 @@ jQuery(document).ready(function($){
 	$('.option.group .inner').click(function() {
 		$('#group-form').show();
 		$(this).hide();
+		$('.text').hide();
 		$('.option.property').hide();
 		$('.option.retirement').hide();
 		$('#group-form').fadeIn();
@@ -42,6 +45,7 @@ jQuery(document).ready(function($){
 		$('.home-form').hide();
 		$('.option .inner').fadeIn();
 		$('.option').fadeIn();
+		$('.text').fadeIn();
 		$('.background').removeClass('property');
 		$('.background').removeClass('retirement');
 		$('.background').removeClass('group');
