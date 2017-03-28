@@ -1,7 +1,7 @@
 {
-    "name": "CMR",
+    "name": "cmr",
     "account": "braftonclientsites",
-    "repo": "CMR",
+    "repo": "cmr",
     "global": {
         "targetroot": "/var/www/html/design/brafton/${NAME}",
         "group": "www",
