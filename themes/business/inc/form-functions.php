@@ -56,6 +56,16 @@ function populate_office_page() {
 		}
 	</style>
 
+	<script>
+	// Function for (de)selecting all offices in the display table
+	function toggleOffices( src ) {
+		checkBoxen = document.getElementsByName( 'office-row' );
+		for( var i=0, n=checkBoxen.length; i<n; i++ ) {
+			checkBoxen[i].checked = src.checked;
+		}
+	}
+	</script>
+
 	<div class="office-wrap">
 		<h2>Welcome to the office details page!</h2>
 
@@ -100,7 +110,16 @@ function populate_office_page() {
 			</div>
 
 			<div id="mm-option" style="display:none;">
-				<p>Show me what you got.</p>
+				<p>Revenue Range</p>
+				<select id="revenue-selector">
+					<option value="">Choose a Revenue Range</option>
+					<option value="1000000,10000000">$1,000,000 - $10,000,000</option>
+					<option value="10000000,50000000">$10,000,000 - $50,000,000</option>
+					<option value="50000000,200000000">$50,000,000 - $200,000,000</option>
+					<option value="200000000,500000000">$200,000,000 - $500,000,000</option>
+					<option value="500000000,2000000000">$500,000,000 - $2,000,000,000</option>
+					<option value="2000000000">$2,000,000,000+</option>
+				</select>
 			</div>
 
 			<div id="show-office-info-btn">
@@ -109,6 +128,13 @@ function populate_office_page() {
 		</div>
 
 		<div id="office-table-holder"></div>
+
+		<div id="email-fields" style="display:none;">
+			<p>Email Subject Line:</p>
+			<input type="text" id="subject-input" />
+			<p>Email Body Text:</p>
+			<textarea cols="60" rows="10" >Email body text here</textarea>
+		</div>
 	</div>
 
 	<?php
@@ -245,8 +271,6 @@ function getGBOfficeIDs( $col ) {
 
 	return $ids;
 }
-//add_action( "wp_ajax_nopriv_get_gb_ids", "getGBOfficeIDs" );
-add_action( "wp_ajax_get_gb_ids", "getGBOfficeIDs" );
 
 // function to grab office IDs for PC
 // takes an industry id (corresponds to "id" in the table "naics"), and finds any office IDs that share that naics_id in the table "tbl_br_office_sic"
@@ -266,8 +290,27 @@ function getPCOfficeIDs( $naicsID ) {
 
 	return $ids;
 }
-//add_action( "wp_ajax_nopriv_get_pc_ids", "getPCOfficeIDs" );
-add_action( "wp_ajax_get_pc_ids", "getPCOfficeIDs" );
+
+// function to grab office IDs for MM industry
+// takes a low and high revenue amount (with commas and dollar sign stripped out), and grabs any officeIDs with revvalue >= $low and < $high
+function getMMOfficeIDs( $low, $high ) {
+	$conn = establish_connection();
+	$table = "tbl_br_office_mm_assetstotalannual";
+	$query = "SELECT officeid FROM $table WHERE tavalue >= $low";
+	if ( $high != "" ) {
+		$query .= " && revvalue < $high";
+	}
+
+	$res = $conn->query( $query );
+
+	$ids = array();
+
+	while ( $row = $res->fetch_assoc() ) {
+		$ids[] = $row['officeid'];
+	}
+
+	return $ids;
+}
 
 // function to grab office details
 // takes an office ID and servicetypeid (of either GB, MM or PC), and stiches together two or three tables to build out an array of offices with what details are available
@@ -279,9 +322,20 @@ function getOfficeInfo( $officeIDs, $service = null) {
 		switch ( $service ) {
 			case 'PC':
 				$officeIDs = getPCOfficeIDs( $_POST['data']['naics'] );
+				if ( count($officeIDs) < 1 ) {
+					echo "No results found!";
+					wp_die();
+				}
 				break;
 			case 'GB':
 				$officeIDs = getGBOfficeIDs( $_POST['data']['employee'] );
+				break;
+			case 'MM':
+				$revRange = explode( ",", $_POST['data']['revenue'] );
+				if ( count($revRange) < 2 ) {
+					$revRange[1] = "";
+				}
+				$officeIDs = getMMOfficeIDs( $revRange[0], $revRange[1] );
 				break;
 			default:
 				# code...
@@ -289,6 +343,11 @@ function getOfficeInfo( $officeIDs, $service = null) {
 		}
 	}
 
+	// check if we actually have any office IDs...if not, display an error and stop processing
+	if ( count($officeIDs) < 1 ) {
+		echo "No Results Found!";
+		wp_die();
+	}
 	// string converted array of IDs, to be used in a MySQL 'IN' statement
 	$inString = implode( ',', $officeIDs );
 	// variables to contain table names
@@ -300,37 +359,40 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	$query = "";
 	// add SELECT statements to query for all relevant tables
 	// build "office" adds
-	$officeSelect = $office . ".companyname, " . $office . ".address1, " . $office . ".address2, " . $office . ".city, " . $office . ".state, " . $office . ".zip, " . $office . ".country";
+	$officeSelect = $office . ".companyname, " . $office . ".address1, " . $office . ".address2, " . $office . ".city, " . $office . ".state, " . $office . ".zip, " . $office . ".country, " . $office . ".notes AS 'office-notes'";
 	// build "contact" adds
-	$contactSelect = $contact . ".maincontact, " . $contact . ".website, " . $contact . ".email, " . $contact . ".telephone, " . $contact . ".fax";
+	$contactSelect = $contact . ".maincontact, " . $contact . ".website, " . $contact . ".email, " . $contact . ".telephone, " . $contact . ".fax, " . $contact . ".notes AS 'contact-notes'";
+	// build "details" adds
+	$detailsSelect = $details . ".typeofbusiness, " . $details . ".yearsinbusiness, " . $details . ".since, " . $details . ".MainOfficeDetails, " . $details . ".ownership, " . $details . ".parent, " . $details . ".numberofclients, " . $details . ".numberofemployees, " . $details . ".internationalofficesnotes, " . $details . ".locationnotes, " . $details . ".notes as 'details-notes', " . $details . ".noted_clients";
 
 	// build FROM statement
 	$from = "FROM $office";
 	$from .= " INNER JOIN $contact ON " . $contact . ".officeid = " . $office . ".officeid";
+	$from .= " INNER JOIN $details ON " . $details . ".officeid = " . $office . ".officeid";
 
 	// build WHERE statement
-	$where = "WHERE " . $office . ".officeid IN (" . $inString . ") && " . $office . ".servicetypeid = '" . $service . "' && " . $contact . ".servicetypeid = '" . $service . "'";
-
+	$where = "WHERE " . $office . ".officeid IN (" . $inString . ") && " . $office . ".servicetypeid = '" . $service . "' && " . $contact . ".servicetypeid = '" . $service . "' && " . $details . ".servicetypeid = '" . $service . "'";
 	// lastly, string all that together into a single query
-	$query .= "SELECT " . $officeSelect . ", " . $contactSelect . " " . $from . " " . $where;
+	$query .= "SELECT " . $officeSelect . ", " . $contactSelect . ", " . $detailsSelect . " " . $from . " " . $where;
 
 	//printDat( $query );
 
 	$conn = establish_connection();
 
 	$res = $conn->query( $query );
+	//printDat($res);
 
 	/*$offices = array();
 	while( $row = $res->fetch_assoc() ) {
 		$offices[] = $row;
 	}
-	return $offices;*/
+	printDat($offices);*/
 
 	// generate an HTML table to display office details
 	$html = "<table id='office-detail-table'>";
 	// top row, for column labels
 	$html .= "<tr style='font-weight:bold;'>";
-	$html .= "<td></td><td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td>";
+	$html .= "<td><input type='checkbox' onClick='toggleOffices(this)' /></td><td>Company Name</td><td>Address 1</td><td>Address 2</td><td>City</td><td>State</td><td>Zip</td><td>Country</td><td>Office Notes</td><td>Main Contact</td><td>Website</td><td>email</td><td>Telephone</td><td>Fax</td><td>Contact Notes</td><td>Type of Business</td><td>Years in Business</td><td>Since</td><td>Main Office Details</td><td>Ownership</td><td>Parent</td><td>Number of Clients</td><td>Number of Employees</td><td>International Offices Notes</td><td>Location Notes</td><td>Details Notes</td><td>Noted Clients</td>";
 	$html .= "</tr>";
 
 	// iterate through result set, building a row per item in results
@@ -344,11 +406,25 @@ function getOfficeInfo( $officeIDs, $service = null) {
 		$html .= "<td>".$row['state']."</td>";
 		$html .= "<td>".$row['zip']."</td>";
 		$html .= "<td>".$row['country']."</td>";
+		$html .= "<td>".$row['office-notes']."</td>";
 		$html .= "<td>".$row['maincontact']."</td>";
 		$html .= "<td>".$row['website']."</td>";
 		$html .= "<td>".$row['email']."</td>";
 		$html .= "<td>".$row['telephone']."</td>";
 		$html .= "<td>".$row['fax']."</td>";
+		$html .= "<td>".$row['contact-notes']."</td>";
+		$html .= "<td>".$row['typeofbusiness']."</td>";
+		$html .= "<td>".$row['yearsinbusiness']."</td>";
+		$html .= "<td>".$row['since']."</td>";
+		$html .= "<td>".$row['MainOfficeDetails']."</td>";
+		$html .= "<td>".$row['ownership']."</td>";
+		$html .= "<td>".$row['parent']."</td>";
+		$html .= "<td>".$row['numberofclients']."</td>";
+		$html .= "<td>".$row['numberofemployees']."</td>";
+		$html .= "<td>".$row['internationalofficesnotes']."</td>";
+		$html .= "<td>".$row['locationnotes']."</td>";
+		$html .= "<td>".$row['details-notes']."</td>";
+		$html .= "<td>".$row['noted_clients']."</td>";
 		$html .= "</tr>";
 	}
 

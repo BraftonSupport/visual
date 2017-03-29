@@ -58,7 +58,8 @@ function populateOffices() {
 	var formData = {
 		service  : jQuery("#service-selector").val(),
 		employee : jQuery("#employee-selector").val(),
-		naics    : jQuery("#naics-selector").val()
+		naics    : jQuery("#naics-selector").val(),
+		revenue  : jQuery("#revenue-selector").val()
 	};
 	//console.log(formData);
 	var toPass = {
@@ -70,5 +71,6 @@ function populateOffices() {
 	jQuery.post( ajaxurl, toPass ).done( function(res) {
 		console.log(res);
 		jQuery("#office-table-holder").html(res);
+		jQuery("#email-fields").css("display","block");
 	});
 }
