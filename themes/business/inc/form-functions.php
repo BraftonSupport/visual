@@ -175,7 +175,7 @@ function populate_office_page() {
 			$email->Body 		= $bodyText;
 
 			// add attachments
-			$email->addAttachment( $_POST['insurance-upload-url'], $_POST['insurance-upload-name'] );
+			$email->addStringAttachment( file_get_contents( $_POST['insurance-upload-url'] ), $_POST['insurance-upload-name'] );
 
 			$email->isHTML(true);
 
