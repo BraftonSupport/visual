@@ -130,10 +130,17 @@ function populate_office_page() {
 		<div id="office-table-holder"></div>
 
 		<div id="email-fields" style="display:none;">
-			<p>Email Subject Line:</p>
+			<h3>Email Subject Line:</h3>
 			<input type="text" id="subject-input" />
-			<p>Email Body Text:</p>
+			<h3>Email Body Text:</h3>
 			<textarea cols="60" rows="10" >Email body text here</textarea>
+			<h3>Upload Documents for Attachment</h3>
+			<label id="insurance-upload-label">Insurance Schedule</label>
+			<input type="button" class="insurance-upload-button" value="Upload Document" />
+			<input type="text" id="insurance-upload-url" name="insurance-upload-url" readonly="readonly" /><br />
+			<label id="supporting-upload-label">Supporting Document</label>
+			<input type="button" class="supporting-upload-button" value="Upload Document" />
+			<input type="text" id="supporting-upload-url" name="supporting-upload-url" readonly="readonly" />
 		</div>
 	</div>
 
