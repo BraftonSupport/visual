@@ -127,24 +127,66 @@ function populate_office_page() {
 			</div>
 		</div>
 
-		<div id="office-table-holder"></div>
+		<form action="" method="post">
 
-		<div id="email-fields" style="display:none;">
-			<h3>Email Subject Line:</h3>
-			<input type="text" id="subject-input" />
-			<h3>Email Body Text:</h3>
-			<textarea cols="60" rows="10" >Email body text here</textarea>
-			<h3>Upload Documents for Attachment</h3>
-			<label id="insurance-upload-label">Insurance Schedule</label>
-			<input type="button" class="insurance-upload-button" value="Upload Document" />
-			<input type="text" id="insurance-upload-url" name="insurance-upload-url" readonly="readonly" />
-			<input type="text" id="insurance-upload-name" name="insurance-upload-name" style="display:none;" />
-			<br />
-			<label id="supporting-upload-label">Supporting Document</label>
-			<input type="button" class="supporting-upload-button" value="Upload Document" />
-			<input type="text" id="supporting-upload-url" name="supporting-upload-url" readonly="readonly" />
-			<input type="text" id="supporting-upload-name" name="supporting-upload-name" style="display:none;" />
-		</div>
+			<div id="office-table-holder"></div>
+
+			<div id="email-fields" style="display:none;">
+				<h3>Email Subject Line:</h3>
+				<input type="text" id="subject-input" name="subject-input" />
+				<h3>Email Body Text:</h3>
+				<textarea cols="60" rows="10" name="body-input">Email body text here</textarea>
+				<h3>Upload Documents for Attachment</h3>
+				<label id="insurance-upload-label">Insurance Schedule</label>
+				<input type="button" class="insurance-upload-button" value="Upload Document" />
+				<input type="text" id="insurance-upload-url" name="insurance-upload-url" readonly="readonly" />
+				<input type="text" id="insurance-upload-name" name="insurance-upload-name" style="display:none;" />
+				<br />
+				<label id="supporting-upload-label">Supporting Document</label>
+				<input type="button" class="supporting-upload-button" value="Upload Document" />
+				<input type="text" id="supporting-upload-url" name="supporting-upload-url" readonly="readonly" />
+				<input type="text" id="supporting-upload-name" name="supporting-upload-name" style="display:none;" />
+			</div>
+
+			<input type="submit" name="submit" value="Submit">
+
+		</form>
+
+		<?php
+		if ( isset( $_POST['submit'] ) ) {
+			printDat( $_POST );
+
+			$email = new PHPMailer();
+
+			$bodyText = $_POST['body-input'] . "<br />";
+			$bodyText .= '<br /><h3>Office Emails</h3><br />';
+
+			foreach( $_POST['office-row'] as $office ) {
+				$bodyText .= $office . '<br />';
+			}
+
+			// set from and destination addresses
+			$email->setFrom( 'johnparx@gmail.com', 'John Parks' );
+			$email->addAddress( 'john.parks@brafton.com', 'John' );
+			$email->addBCC( 'deryk.king@brafton.com', 'Deryk' );
+
+			// set email text info
+			$email->Subject 	= $_POST['subject-input'];
+			$email->Body 		= $bodyText;
+
+			// add attachments
+			$email->addAttachment( $_POST['insurance-upload-url'], $_POST['insurance-upload-name'] );
+
+			$email->isHTML(true);
+
+			if(!$email->send()) {
+			    echo 'Message could not be sent.';
+			    echo 'Mailer Error: ' . $mail->ErrorInfo;
+			} else {
+			    echo 'Message has been sent';
+			}
+		}
+		?>
 	</div>
 
 	<?php
@@ -408,7 +450,7 @@ function getOfficeInfo( $officeIDs, $service = null) {
 	// iterate through result set, building a row per item in results
 	while( $row = $res->fetch_assoc() ) {
 		$html .= "<tr>";
-		$html .= "<td><input type='checkbox' name='office-row' value='".$row['email']."' /></td>";
+		$html .= "<td><input type='checkbox' name='office-row[]' value='".$row['email']."' /></td>";
 		$html .= "<td>".$row['companyname']."</td>";
 		$html .= "<td>".$row['address1']."</td>";
 		$html .= "<td>".$row['address2']."</td>";
