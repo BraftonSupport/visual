@@ -32,6 +32,52 @@ jQuery(document).ready(function($) {
 		populateOffices();
 	});
 
+	$('.insurance-upload-button').click(function(e) {
+        e.preventDefault();
+        var doc = wp.media({ 
+            title: 'Upload Document',
+            // mutiple: true if you want to upload multiple files at once
+            multiple: false
+        }).open()
+        .on('select', function(e){
+            
+            // This will return the selected image from the Media Uploader, the result is an object
+            var uploaded_doc = doc.state().get('selection').first();
+            // We convert uploaded_image to a JSON object to make accessing it easier
+            var docObject = uploaded_doc.toJSON();
+
+            // Snag insurance URL field
+            var insuranceURL = jQuery( '#insurance-upload-url' );
+
+            // Set documents's URL input field
+            insuranceURL.val( docObject.url );
+
+        });
+    });
+
+    $('.supporting-upload-button').click(function(e) {
+        e.preventDefault();
+        var doc = wp.media({ 
+            title: 'Upload Document',
+            // mutiple: true if you want to upload multiple files at once
+            multiple: false
+        }).open()
+        .on('select', function(e){
+            
+            // This will return the selected image from the Media Uploader, the result is an object
+            var uploaded_doc = doc.state().get('selection').first();
+            // We convert uploaded_image to a JSON object to make accessing it easier
+            var docObject = uploaded_doc.toJSON();
+
+            // Snag insurance URL field
+            var supportingURL = jQuery( '#supporting-upload-url' );
+
+            // Set documents's URL input field
+            supportingURL.val( docObject.url );
+
+        });
+    });
+
 });
 
 // AJAX call to populate industries in a given category
