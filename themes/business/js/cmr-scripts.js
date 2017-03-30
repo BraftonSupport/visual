@@ -46,11 +46,15 @@ jQuery(document).ready(function($) {
             // We convert uploaded_image to a JSON object to make accessing it easier
             var docObject = uploaded_doc.toJSON();
 
-            // Snag insurance URL field
-            var insuranceURL = jQuery( '#insurance-upload-url' );
+            console.log( docObject );
 
-            // Set documents's URL input field
+            // Snag insurance URL and name fields
+            var insuranceURL = jQuery( '#insurance-upload-url' );
+            var insuranceName = jQuery( '#insurance-upload-name' );
+
+            // Set documents's URL and name input fields
             insuranceURL.val( docObject.url );
+            insuranceName.val( docObject.filename );
 
         });
     });
@@ -69,11 +73,13 @@ jQuery(document).ready(function($) {
             // We convert uploaded_image to a JSON object to make accessing it easier
             var docObject = uploaded_doc.toJSON();
 
-            // Snag insurance URL field
+            // Snag supporting doc URL and name fields
             var supportingURL = jQuery( '#supporting-upload-url' );
+            var supportingName = jQuery( '#supporting-upload-name' );
 
-            // Set documents's URL input field
+            // Set documents's URL and name input fields
             supportingURL.val( docObject.url );
+            supportingName.val( docObject.filename );
 
         });
     });
