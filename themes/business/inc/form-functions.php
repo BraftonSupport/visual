@@ -135,7 +135,7 @@ function populate_office_page() {
 				<h3>Email Subject Line:</h3>
 				<input type="text" id="subject-input" name="subject-input" />
 				<h3>Email Body Text:</h3>
-				<textarea cols="60" rows="10" name="email-body">Email body text here</textarea>
+				<textarea cols="60" rows="10" name="body-input">Email body text here</textarea>
 				<h3>Upload Documents for Attachment</h3>
 				<label id="insurance-upload-label">Insurance Schedule</label>
 				<input type="button" class="insurance-upload-button" value="Upload Document" />
@@ -155,6 +155,36 @@ function populate_office_page() {
 		<?php
 		if ( isset( $_POST['submit'] ) ) {
 			printDat( $_POST );
+
+			$email = new PHPMailer();
+
+			$bodyText = $_POST['body-input'] . "<br />";
+			$bodyText .= '<br /><h3>Office Emails</h3><br />';
+
+			foreach( $_POST['office-row'] as $office ) {
+				$bodyText .= $office . '<br />';
+			}
+
+			// set from and destination addresses
+			$email->setFrom( 'johnparx@gmail.com', 'John Parks' );
+			$email->addAddress( 'john.parks@brafton.com', 'John' );
+			$email->addBCC( 'deryk.king@brafton.com', 'Deryk' );
+
+			// set email text info
+			$email->Subject 	= $_POST['subject-input'];
+			$email->Body 		= $bodyText;
+
+			// add attachments
+			$email->addAttachment( $_POST['insurance-upload-url'], $_POST['insurance-upload-name'] );
+
+			$email->isHTML(true);
+
+			if(!$email->send()) {
+			    echo 'Message could not be sent.';
+			    echo 'Mailer Error: ' . $mail->ErrorInfo;
+			} else {
+			    echo 'Message has been sent';
+			}
 		}
 		?>
 	</div>
