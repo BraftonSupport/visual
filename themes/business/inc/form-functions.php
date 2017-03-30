@@ -137,10 +137,13 @@ function populate_office_page() {
 			<h3>Upload Documents for Attachment</h3>
 			<label id="insurance-upload-label">Insurance Schedule</label>
 			<input type="button" class="insurance-upload-button" value="Upload Document" />
-			<input type="text" id="insurance-upload-url" name="insurance-upload-url" readonly="readonly" /><br />
+			<input type="text" id="insurance-upload-url" name="insurance-upload-url" readonly="readonly" />
+			<input type="text" id="insurance-upload-name" name="insurance-upload-name" style="display:none;" />
+			<br />
 			<label id="supporting-upload-label">Supporting Document</label>
 			<input type="button" class="supporting-upload-button" value="Upload Document" />
 			<input type="text" id="supporting-upload-url" name="supporting-upload-url" readonly="readonly" />
+			<input type="text" id="supporting-upload-name" name="supporting-upload-name" style="display:none;" />
 		</div>
 	</div>
 
