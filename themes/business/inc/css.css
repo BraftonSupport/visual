@@ -1,0 +1,24 @@
+/* -- Uhh.. --*/
+
+pre { padding: 0 25px 10px; width: 100%;
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+.short { max-width: 95%; }
+
+.customize-control-site_icon .thumbnail-image { max-width: 100px; max-height: 100px; }
+
+select + .floatimg { display:none; position:absolute; top: 34%; right: 10%;  }
+
+select:hover + .floatimg { display: block; }
+
+.widget-inside .wp-color-result { margin: 10px 6px -6px 6px; }
+
+.mce-toolbar .mce-btn-group .mce-btn.mce-listbox span { padding-right: 16px; }
+
+textarea.title { resize: none; white-space: nowrap; overflow: hidden; }
+
+#more-boxes textarea { width: 100%; }

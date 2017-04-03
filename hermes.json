@@ -1,0 +1,22 @@
+{
+    "name": "cmr",
+    "account": "braftonclientsites",
+    "repo": "cmr",
+    "global": {
+        "targetroot": "/var/www/html/design/brafton/${NAME}",
+        "group": "www",
+        "owner": "apache",
+        "url": "http://design.brafton.com/${NAME}",
+        "title": "CMR Associates"
+    },
+    "deploy": [
+        {
+            "tag": "dev",
+            "branch": "master",
+            "beforeinstall": "scripts/before.sh",
+            "afterinstall": "scripts/after.sh",
+            "source": "themes/business",
+            "target": "${GLOBAL_TARGETROOT}/wp-content/themes/business"
+        }
+    ]
+}

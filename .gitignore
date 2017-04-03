@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 /.git
+=======
+.wp-cli
+sass-cache
+>>>>>>> 96a26de7a0f3029662b9d640e384e717bab7492d

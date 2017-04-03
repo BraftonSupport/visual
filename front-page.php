@@ -40,34 +40,150 @@ if ( !$video ) {
   $message_unsent  = "Message was not sent. Try Again.";
   $message_sent    = "Thanks! Your message has been sent.";
 
-  //user posted variables
-  $name = $_POST['message_name'];
-  $email = $_POST['message_email'];
-  $human = $_POST['message_human'];
-  $option = $_POST['message_options'];
 
-  //php mailer variables
-  $to = "gregory.rich@brafton.com";
-  $subject = "Someone sent a message from ".get_bloginfo('name');
+  if (!empty($_POST['prop-submit'])) {
 
-  $message = "<h1>Here's a successful email submission.</h1>";
-  $message .= "<ul>";
-  $message .= "<li>Name: " . $name . "</li>";
-  $message .= "<li>Email: " . $email . "</li>";
-  $message .= "<li>Option: " . $option . "</li>";
-  $message .= "</ul>";
+	  //user posted variables
+	  //Prop Form Fields
+	  $naics = 			$_POST['message_naics'];
+	  $naics_other = 	$_POST['message_other'];
+	  $revenue = 		$_POST['message_revenue'];
+	  $country = 		$_POST['message_country'];
+	  $years = 			$_POST['message_years'];
+	  $name = 			$_POST['message_name'];
+	  $email = 			$_POST['message_email'];
+	  $attachments = 	$_FILES['upload_file'];
+	  $human = 			$_POST['message_human'];
 
-  $header = "From:gregory.rich@brafton.com \r\n";
-  $header .= "MIME-Version: 1.0\r\n";
-  $header .= "Content-type: text/html\r\n";
+	  //php mailer variables
+	  $to = "gregory.rich@brafton.com";
+	  $subject = "Property/Casualty Form Submission from ".get_bloginfo('name');
 
-  //$mailResult = mail( $to, $subject, $message, $header );
+	  $message = "<h1>Here's a successful email submission.</h1>";
+	  $message .= "<ul>";
+	  $message .= "<li>NAICS Type:" . $naics . "</li>";
+	  $message .= "<li>Other NAICS Type?:" . $naics_other . "</li>";
+	  $message .= "<li>Revenue:" . $revenue . "</li>";
+	  $message .= "<li>Country:" . $country . "</li>";
+	  $message .= "<li>Years in Business:" . $years . "</li>";
+	  $message .= "<li>Name: " . $name . "</li>";
+	  $message .= "<li>Email: " . $email . "</li>";
+	  $message .= "</ul>";
 
-  //if ( $mailResult == true ) {
-    //echo "Message sent successfully";
-  //} else {
-    //echo "Message failed to send";
-  //}
+	  //header
+      $headers = "MIME-Version: 1.0\r\n"; 
+	  $header = "From:gregory.rich@brafton.com \r\n";
+      $headers .= "Reply-To: ".$sender_email."" . "\r\n";
+      $headers .= "Content-Type: multipart/mixed; boundary = $boundary\r\n\r\n"; 
+
+	  $mailResult = mail( $to, $subject, $message, $header );
+
+	  if ( $mailResult == true ) {
+	    echo "Message sent successfully";
+	  } else {
+	    echo "Message failed to send";
+	  }
+
+  }
+
+  else if (!empty($_POST['group-submit'])) {
+	  //user posted variables
+	  //Prop Form Fields
+	  $naics = 			$_POST['message_naics'];
+	  $naics_other = 	$_POST['message_other'];
+	  $employees = 		$_POST['message_employees'];
+	  $country = 		$_POST['message_country'];
+	  $years = 			$_POST['message_years'];
+	  $name = 			$_POST['message_name'];
+	  $email = 			$_POST['message_email'];
+	  // Uploads
+	  // Uploads
+	  $human = 			$_POST['message_human'];
+
+	  //php mailer variables
+	  $to = "gregory.rich@brafton.com";
+	  $subject = "Group Form Submission from ".get_bloginfo('name');
+
+	  $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+				  <head><title>Email Sig</title></head><body>';
+	  $message = "<h1>Here's a successful email submission.</h1>";
+	  $message .= "<ul>";
+	  $message .= "<li>NAICS Type:" . $naics . "</li>";
+	  $message .= "<li>Other NAICS Type?:" . $naics_other . "</li>";
+	  $message .= "<li># of Employees:" . $employees . "</li>";
+	  $message .= "<li>Country:" . $country . "</li>";
+	  $message .= "<li>Years in Business:" . $years . "</li>";
+	  $message .= "<li>Name: " . $name . "</li>";
+	  $message .= "<li>Email: " . $email . "</li>";
+	  $message .= "</ul>";
+	  $message .= "</ul>";
+	  $message .= "</body></html>";
+
+	  $header = "From:gregory.rich@brafton.com \r\n";
+	  $header .= "MIME-Version: 1.0\r\n";
+	  $header .= "Content-type: text/html\r\n";
+
+	  // add attachments
+	  $attachment = addAttachment( file_get_contents( $_POST['upload_file'] ), $_POST['multi_file_upload'] );
+
+	  $mailResult = mail( $to, $subject, $message, $header, $attachment );
+
+	  if ( $mailResult == true ) {
+	    echo "Message sent successfully";
+	  } else {
+	    echo "Message failed to send";
+	  }
+
+  }
+
+  else if (!empty($_POST['ret-submit'])) {
+	  //user posted variables
+	  //Prop Form Fields
+	  $naics = 			$_POST['message_naics'];
+	  $naics_other = 	$_POST['message_other'];
+	  $employees = 		$_POST['message_employees'];
+	  $assets = 		$_POST['message_assets'];
+	  $country = 		$_POST['message_country'];
+	  $years = 			$_POST['message_years'];
+	  $name = 			$_POST['message_name'];
+	  $email = 			$_POST['message_email'];
+	  // Uploads
+	  // Uploads
+	  $human = 			$_POST['message_human'];
+
+	  //php mailer variables
+	  $to = "gregory.rich@brafton.com";
+	  $subject = "Retirement Form Submission from ".get_bloginfo('name');
+
+	  $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+				  <head><title>Email Sig</title></head><body>';
+	  $message = "<h1>Here's a successful email submission.</h1>";
+	  $message .= "<ul>";
+	  $message .= "<li>NAICS Type:" . $naics . "</li>";
+	  $message .= "<li>Other NAICS Type?:" . $naics_other . "</li>";
+	  $message .= "<li># of Employees:" . $employees . "</li>";
+	  $message .= "<li>Retirement Plan Assets:" . $assets . "</li>";
+	  $message .= "<li>Country:" . $country . "</li>";
+	  $message .= "<li>Years in Business:" . $years . "</li>";
+	  $message .= "<li>Name: " . $name . "</li>";
+	  $message .= "<li>Email: " . $email . "</li>";
+	  $message .= "</ul>";
+	  $message .= "</body></html>";
+	  $message -> isHTML(true);
+
+	  $header = "From:gregory.rich@brafton.com \r\n";
+	  $header .= "MIME-Version: 1.0\r\n";
+	  $header .= "Content-type: text/html\r\n";
+
+	  $mailResult = mail( $to, $subject, $message, $header );
+
+	  if ( $mailResult == true ) {
+	    echo "Message sent successfully";
+	  } else {
+	    echo "Message failed to send";
+	  }
+
+  }
 
   if(!$human == 0){
     if($human != 2) my_contact_form_generate_response("error", $not_human); //not human!
@@ -138,10 +254,7 @@ get_header(); ?>
 
 			<div class="options">
 				<div class="text">
-					<h2>Overwhelmed by insurance confusion and expense?</h2>                 		
-					<p>Confused by retirement regulatory compliance and hidden fees?  Insurance costs keep increasing?</p>
-					<p>With CMR, you can easily navigate the complicated demands of commercial insurance and retirement programs.</p>
-					<p><strong>Click on one of the icons below to receive your confidential no-cost industry benchmark report:</strong></p>
+					<h2>Get your complimentary and confidential benchmark<br /> report today.Click an icon to get started!</h2>
 				</div>
 
 				<div class="option property">
